@@ -74,7 +74,7 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
         for (int i = 0; i < filedEntities2.size(); i++) {
             TableFiledEntity priKey = filedEntities2.get(i);
             if (priKey.getKey().equals("PRI")) {
-                sb.append("\n\n\t <resultMap id=\"BaseResultMap\" type=\" ")
+                sb.append("\n\n\t <resultMap id=\"BaseResultMap\" type=\"")
                         .append(springBootCli.getPackageName()).append(".entity.")
                         .append(transformTableInfo.getTableName()).append("\">\n\t\t<id column=\"")
                         .append(filedEntities.get(i).getName()).append("\" property=\"")

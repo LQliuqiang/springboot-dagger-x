@@ -94,7 +94,9 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
         sb.append("package ").append(springBootCli.getPackageName()).append(".").append(getPackageName())
                 .append(".impl;\n\nimport ").append(springBootCli.getPackageName()).append(".entity.")
                 .append(transformTableInfo.getTableName())
-                .append(";\n\nimport com.lq.service.").append(transformTableInfo.getTableName()).append("Service;");
+                .append(";\n\nimport ")
+                .append(springBootCli.getPackageName()).append(".service.")
+                .append(transformTableInfo.getTableName()).append("Service");
         if (springBootCli.isUseRedis()) {
             sb.append(";\nimport org.springframework.data.redis.core.RedisTemplate");
         }

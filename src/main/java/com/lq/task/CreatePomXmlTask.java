@@ -110,8 +110,10 @@ public final class CreatePomXmlTask {
             Element mysql = createDependencyElm(document, "mysql", "mysql-connector-java", springBootCli.getMysqlConnectorVersion());
             dependenciesNode.appendChild(mysql);
         }
-        Element druid = createDependencyElm(document, "com.alibaba", "druid", springBootCli.getDruidVersion());
-        dependenciesNode.appendChild(druid);
+        if (!dependencies.contains("druid")) {
+            Element druid = createDependencyElm(document, "com.alibaba", "druid", springBootCli.getDruidVersion());
+            dependenciesNode.appendChild(druid);
+        }
         if (!dependencies.contains("spring-boot-starter-data-redis") && springBootCli.isUseRedis()) {
             Element redis = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-data-redis");
             dependenciesNode.appendChild(redis);

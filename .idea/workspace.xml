@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3933e037-1e78-4a08-8be3-eb27aebf4b99" name="Default Changelist" comment="" />
+    <list default="true" id="3933e037-1e78-4a08-8be3-eb27aebf4b99" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateServiceTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateServiceTask.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,7 +44,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1591316415522</updated>
-      <workItem from="1591316419984" duration="1674000" />
+      <workItem from="1591316419984" duration="5181000" />
     </task>
     <servers />
   </component>
@@ -63,5 +65,9 @@
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="447" y="201" width="786" height="608" key="find.popup/0.0.1680.1010@0.0.1680.1010" timestamp="1591316926260" />
+    <state x="210" y="205" key="new project wizard" timestamp="1591321263800">
+      <screen x="0" y="0" width="1680" height="1010" />
+    </state>
+    <state x="210" y="205" key="new project wizard/0.0.1680.1010@0.0.1680.1010" timestamp="1591321263800" />
   </component>
 </project>
