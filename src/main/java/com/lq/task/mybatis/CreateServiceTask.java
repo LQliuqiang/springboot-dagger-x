@@ -44,45 +44,55 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
         StringBuilder sb = new StringBuilder();
         sb.append("package ").append(springBootCli.getPackageName()).append(".").append(getPackageName())
                 .append(";\n\nimport ").append(springBootCli.getPackageName()).append(".entity.")
-                .append(transformTableInfo.getTableName()).append(";\n\n")
-                .append("public interface ").append(transformTableInfo.getTableName()).append("Service {\n\n");
-        sb.append("\tboolean insert")
-                .append(transformTableInfo.getTableName())
-                .append("(")
-                .append(transformTableInfo.getTableName())
-                .append(" ")
-                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
-                .append(");\n\n");
+                .append(transformTableInfo.getTableName()).append(";");
+        if (springBootCli.isUsePage()) {
+            sb.append("\nimport java.util.List;");
+        }
+        sb.append("\n\npublic interface ").append(transformTableInfo.getTableName()).append("Service {\n\n");
         transformTableInfo.getFiledEntities().stream()
                 .filter(tableFiledEntity -> tableFiledEntity.getKey().equals("PRI"))
                 .findFirst()
-                .ifPresent(priKey -> sb.append("\t")
-                        .append(transformTableInfo.getTableName())
-                        .append(" query")
-                        .append(transformTableInfo.getTableName())
-                        .append("By")
-                        .append(StringUtil.firstToUpperCase(priKey.getName()))
-                        .append("(")
-                        .append(priKey.getType())
-                        .append(" ")
-                        .append(priKey.getName())
-                        .append(");\n\n")
-                        .append("\tint delete")
-                        .append(transformTableInfo.getTableName())
-                        .append("By")
-                        .append(StringUtil.firstToUpperCase(priKey.getName()))
-                        .append("(")
-                        .append(priKey.getType())
-                        .append(" ")
-                        .append(priKey.getName())
-                        .append(");\n\n")
-                        .append("\tboolean update")
-                        .append(transformTableInfo.getTableName())
-                        .append("(")
-                        .append(transformTableInfo.getTableName())
-                        .append(" ")
-                        .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
-                        .append(");\n\n")
+                .ifPresent(priKey -> {
+                            sb.append("\tboolean insert")
+                                    .append(transformTableInfo.getTableName())
+                                    .append("(")
+                                    .append(transformTableInfo.getTableName())
+                                    .append(" ")
+                                    .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                    .append(");\n\n\t");
+                            if (springBootCli.isUsePage()) {
+                                sb.append("List<").append(transformTableInfo.getTableName()).append("> queryAll")
+                                        .append(transformTableInfo.getTableName())
+                                        .append("(Integer page,Integer pageSize);\n\n\t")
+                                        .append("Integer queryAll").append(transformTableInfo.getTableName()).append("Count();\n\n\t");
+                            }
+                            sb.append(transformTableInfo.getTableName())
+                                    .append(" query")
+                                    .append(transformTableInfo.getTableName())
+                                    .append("By")
+                                    .append(StringUtil.firstToUpperCase(priKey.getName()))
+                                    .append("(")
+                                    .append(priKey.getType())
+                                    .append(" ")
+                                    .append(priKey.getName())
+                                    .append(");\n\n")
+                                    .append("\tint delete")
+                                    .append(transformTableInfo.getTableName())
+                                    .append("By")
+                                    .append(StringUtil.firstToUpperCase(priKey.getName()))
+                                    .append("(")
+                                    .append(priKey.getType())
+                                    .append(" ")
+                                    .append(priKey.getName())
+                                    .append(");\n\n")
+                                    .append("\tboolean update")
+                                    .append(transformTableInfo.getTableName())
+                                    .append("(")
+                                    .append(transformTableInfo.getTableName())
+                                    .append(" ")
+                                    .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                    .append(");\n\n");
+                        }
                 );
         sb.append("\n}");
         return sb.toString();
@@ -99,6 +109,9 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                 .append(transformTableInfo.getTableName()).append("Service");
         if (springBootCli.isUseRedis()) {
             sb.append(";\nimport org.springframework.data.redis.core.RedisTemplate");
+        }
+        if (springBootCli.isUsePage()) {
+            sb.append(";\nimport java.util.List");
         }
         sb.append(";\nimport javax.annotation.Resource;\nimport org.springframework.stereotype.Service;\nimport ")
                 .append(springBootCli.getPackageName()).append(".mapper.").append(transformTableInfo.getTableName())
@@ -119,21 +132,52 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
             sb.append(transformTableInfo.getTableName()).append("> ")
                     .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("RedisTemplate;\n");
         }
-        sb.append("\n\t@Override\n\tpublic boolean insert")
-                .append(transformTableInfo.getTableName())
-                .append("(")
-                .append(transformTableInfo.getTableName())
-                .append(" ")
-                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
-                .append("){\n\t\t")
-                .append("return ").append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
-                .append("Mapper.insert")
-                .append(transformTableInfo.getTableName()).append("(")
-                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append(");\n\t}\n\n");
         transformTableInfo.getFiledEntities().stream()
                 .filter(tableFiledEntity -> tableFiledEntity.getKey().equals("PRI"))
                 .findFirst()
                 .ifPresent(priKey -> {
+                    sb.append("\n\t@Override\n\tpublic boolean insert")
+                            .append(transformTableInfo.getTableName())
+                            .append("(")
+                            .append(transformTableInfo.getTableName())
+                            .append(" ")
+                            .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                            .append("){\n\t\t");
+
+                    if (springBootCli.isUseRedis()) {
+                        sb.append("boolean insertFlag = ").append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                .append("Mapper.insert")
+                                .append(transformTableInfo.getTableName()).append("(")
+                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                .append(");\n\t\tif (insertFlag) {\n\t\t\t")
+                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                .append("RedisTemplate.opsForValue().set(")
+                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                .append(".get").append(StringUtil.firstToUpperCase(priKey.getName())).append("(),")
+                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                .append(");\n\t\t}\n\t\treturn insertFlag;\n\t}\n\n");
+                    } else {
+                        sb.append("return ").append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                .append("Mapper.insert")
+                                .append(transformTableInfo.getTableName()).append("(")
+                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append(");\n\t}\n\n");
+                    }
+
+                    if (springBootCli.isUsePage()) {
+                        sb.append("\t@Override\n\tpublic List<").append(transformTableInfo.getTableName()).append("> queryAll")
+                                .append(transformTableInfo.getTableName())
+                                .append("(Integer page,Integer pageSize){\n\t\tpage = (page - 1) * pageSize;\n\t\treturn ")
+                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                .append("Mapper.queryAll")
+                                .append(transformTableInfo.getTableName())
+                                .append("(page,pageSize);\n\t}\n\n")
+                                .append("\t@Override\n\tpublic Integer queryAll").append(transformTableInfo.getTableName()).append("Count(){\n\t\treturn ")
+                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                .append("Mapper.queryAll")
+                                .append(transformTableInfo.getTableName())
+                                .append("Count();\n\t}\n\n");
+                    }
+
                     sb.append("\t@Override\n\tpublic ")
                             .append(transformTableInfo.getTableName())
                             .append(" query")

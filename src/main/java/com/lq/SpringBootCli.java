@@ -12,6 +12,7 @@ import com.lq.task.CreateTemplateTask;
 import com.lq.task.mybatis.*;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class SpringBootCli {
     private String filterTableNameStr;
     private boolean generateController;
     private boolean useRedis;
+    private boolean usePage;
     private boolean forceCover;
     private String projectPath;
     private String packageName;
@@ -42,6 +44,7 @@ public class SpringBootCli {
         this.filterTableNameStr = builder.filterTableNameStr;
         this.generateController = builder.generateController;
         this.useRedis = builder.useRedis;
+        this.usePage = builder.usePage;
         this.forceCover = builder.forceCover;
         String path = new File(builder.aClass.getResource("").getPath()).getPath();
         this.projectPath = path.substring(0, path.indexOf(File.separator + "target" + File.separator));
@@ -56,15 +59,22 @@ public class SpringBootCli {
         new CreatePomXmlTask(this).execute();
         new CreateApplicationXmlTask(this).execute();
         new CreateTemplateTask(this).execute();
-        createMybatis(null, filterTableNames);
+        List<String> tableNameList = Arrays.asList(filterTableNames);
+        List<TableInfo> tableInfos = new CreateJavaBeanTask(this).execute(tableInfo -> !tableNameList.contains(tableInfo.getTableName()));
+        createMybatis(null, tableInfos);
     }
 
-    public void createMybatis(String... filterTableNames) throws Exception {
-        createMybatis(null, filterTableNames);
+    public void createMybatis(String... tableNames) throws Exception {
+        createMybatis(null, tableNames);
     }
 
-    public void createMybatis(List<MybatisInterceptor> mybatisInterceptors, String... filterTableNames) throws Exception {
-        List<TableInfo> tableInfos = new CreateJavaBeanTask(this, filterTableNames).execute();
+    public void createMybatis(List<MybatisInterceptor> mybatisInterceptors,String... tableNames) throws Exception {
+        List<String> tableNameList = Arrays.asList(tableNames);
+        List<TableInfo> tableInfos = new CreateJavaBeanTask(this).execute(tableInfo -> tableNameList.contains(tableInfo.getTableName()));
+        createMybatis(mybatisInterceptors, tableInfos);
+    }
+
+    private void createMybatis(List<MybatisInterceptor> mybatisInterceptors, List<TableInfo> tableInfos) throws Exception {
         Optional.ofNullable(mybatisInterceptors)
                 .orElse(Collections.emptyList())
                 .stream()
@@ -91,6 +101,10 @@ public class SpringBootCli {
         }
     }
 
+    public void useRedis() throws Exception {
+        this.useRedis = true;
+        new CreatePomXmlTask(this).execute();
+    }
 
     public JdbcConfigEntity getJdbcConfigEntity() {
         return jdbcConfigEntity;
@@ -144,6 +158,9 @@ public class SpringBootCli {
         return forceCover;
     }
 
+    public boolean isUsePage() {
+        return usePage;
+    }
 
     public void setGenerateController(boolean generateController) {
         this.generateController = generateController;
@@ -168,9 +185,9 @@ public class SpringBootCli {
         private String fastJsonVersion = "1.2.47";
         private String filterTableNameStr;
         private boolean generateController;
+        private boolean usePage;
         private boolean useRedis;
         private boolean forceCover;
-
 
         public Builder(Class<?> aClass, JdbcConfigEntity jdbcConfigEntity) {
             this.jdbcConfigEntity = jdbcConfigEntity;
@@ -219,6 +236,11 @@ public class SpringBootCli {
 
         public Builder setForceCover(boolean forceCover) {
             this.forceCover = forceCover;
+            return this;
+        }
+
+        public Builder setUsePage(boolean usePage) {
+            this.usePage = usePage;
             return this;
         }
 

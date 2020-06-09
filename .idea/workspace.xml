@@ -2,6 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3933e037-1e78-4a08-8be3-eb27aebf4b99" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/CreatePomXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/CreatePomXmlTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateControllerTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateControllerTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateJavaBeanTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateJavaBeanTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperXmlTask.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateServiceTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateServiceTask.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -23,13 +30,18 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.lq" />
+      <recent name="com.lq.task" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\LQ-project\springboot-dagger-x\src\main\java\com\lq\task\mybatis" />
       <recent name="D:\LQ-project\springboot-dagger-x\src\main\java" />
       <recent name="D:\LQ-project\springboot-dagger-x\src\main\java\com\lq" />
     </key>
@@ -44,7 +56,10 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1591316415522</updated>
-      <workItem from="1591316419984" duration="5181000" />
+      <workItem from="1591316419984" duration="9646000" />
+      <workItem from="1591576426385" duration="2095000" />
+      <workItem from="1591595404158" duration="3073000" />
+      <workItem from="1591664815757" duration="581000" />
     </task>
     <servers />
   </component>

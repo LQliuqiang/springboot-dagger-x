@@ -6,7 +6,7 @@
 
     <groupId>com.github.LQliuqiang</groupId>
     <artifactId>springboot-dagger-x</artifactId>
-    <version>1.1.RELEASE</version>
+    <version>1.2.RELEASE</version>
     <name>springboot-dagger-x</name>
     <description>Fast construction of springboot microservices</description>
     <url>https://blog.csdn.net/qq_33429583</url>

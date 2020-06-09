@@ -18,6 +18,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 创建pom文件
+ */
 public final class CreatePomXmlTask {
 
     private SpringBootCli springBootCli;
@@ -118,7 +121,7 @@ public final class CreatePomXmlTask {
             Element redis = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-data-redis");
             dependenciesNode.appendChild(redis);
             if (!dependencies.contains("jackson-databind")) {
-                Element jackson = createDependencyElm(document, "com.fasterxml.jackson.core", "jackson-databind", "2.9.8");
+                Element jackson = createDependencyElm(document, "com.fasterxml.jackson.core", "jackson-databind", "2.10.2");
                 dependenciesNode.appendChild(jackson);
             }
         }

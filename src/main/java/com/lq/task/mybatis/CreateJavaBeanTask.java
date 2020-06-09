@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -19,12 +20,14 @@ public final class CreateJavaBeanTask extends BaseTask<List<TableInfo>> {
 
     private final JdbcUtil jdbcUtil;
 
-    private String[] filterTableNames;
-
-    public CreateJavaBeanTask(SpringBootCli springBootCli, String[] filterTableNames) {
+    public CreateJavaBeanTask(SpringBootCli springBootCli) {
         super(springBootCli);
         jdbcUtil = new JdbcUtil(springBootCli.getJdbcConfigEntity());
-        this.filterTableNames = filterTableNames;
+    }
+
+    @Override
+    List<TableInfo> execute() throws Exception {
+        return null;
     }
 
 
@@ -33,13 +36,12 @@ public final class CreateJavaBeanTask extends BaseTask<List<TableInfo>> {
         return "entity";
     }
 
-    public List<TableInfo> execute() throws Exception {
+    public List<TableInfo> execute(Predicate<? super TableInfo> predicate) throws Exception {
         if (checkDir()) {
             List<TableInfo> tableInfos = jdbcUtil.queryTableInfo();
             if (tableInfos != null && tableInfos.size() > 0) {
-                List<String> tableNameList = Arrays.asList(filterTableNames);
                 tableInfos = tableInfos.stream()
-                        .filter(tableInfo -> !tableNameList.contains(tableInfo.getTableName()))
+                        .filter(predicate)
                         .collect(Collectors.toList());
                 for (TableInfo tableInfo : tableInfos) {
                     TableInfo transformTableInfo = transformTableInfo(tableInfo);
