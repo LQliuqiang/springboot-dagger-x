@@ -2,18 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3933e037-1e78-4a08-8be3-eb27aebf4b99" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/tortoise/CreateTortoiseTask.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/validate/CheckDependency.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/CreateApplicationXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/CreateApplicationXmlTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/BaseTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/BaseTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateControllerTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateControllerTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateJavaBeanTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateJavaBeanTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperXmlTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateRedisConfigTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateRedisConfigTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateServiceTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateServiceTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +60,7 @@
       <workItem from="1591748886733" duration="1127000" />
       <workItem from="1591769249987" duration="77000" />
       <workItem from="1594100882185" duration="795000" />
-      <workItem from="1594174987014" duration="932000" />
+      <workItem from="1594174987014" duration="1178000" />
     </task>
     <servers />
   </component>
