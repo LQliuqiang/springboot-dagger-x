@@ -33,7 +33,8 @@ public final class CreateApplicationXmlTask {
                     .append("\n    jedis: \n      pool: ")
                     .append("\n        max-idle: ").append("100")
                     .append("\n        min-idle: ").append("50")
-                    .append("\n        max-active: ").append("150");
+                    .append("\n        max-active: ").append("150")
+                    .append("\n    password: ").append("123456");
         }
         sb.append("\n\nmybatis:\n  mapper-locations: classpath:mapper/*.xml\n  configuration: \n    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl\n    map-underscore-to-camel-case: true");
         FileUtil.createWriteFile(file, sb.toString());

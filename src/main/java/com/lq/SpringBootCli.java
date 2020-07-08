@@ -10,6 +10,8 @@ import com.lq.task.CreateApplicationXmlTask;
 import com.lq.task.CreatePomXmlTask;
 import com.lq.task.CreateTemplateTask;
 import com.lq.task.mybatis.*;
+import com.lq.task.tortoise.CreateTortoiseTask;
+import com.lq.task.validate.CheckDependency;
 
 import java.io.File;
 import java.util.Arrays;
@@ -64,6 +66,11 @@ public class SpringBootCli {
         createMybatis(null, tableInfos);
     }
 
+    public void useTortoise() throws Exception {
+        new CheckDependency(this).execute(CheckDependency.REDIS_FLAG);
+        new CreateTortoiseTask(this).execute();
+    }
+
     public void createMybatis(String... tableNames) throws Exception {
         createMybatis(null, tableNames);
     }
@@ -94,6 +101,7 @@ public class SpringBootCli {
                 .findFirst().ifPresent(serviceJavaInterceptor -> serviceJavaInterceptor.handle(this, tableInfos));
         new CreateServiceTask(this, tableInfos).execute();
         if (this.useRedis) {
+            new CheckDependency(this).execute(CheckDependency.REDIS_FLAG);
             new CreateRedisConfigTask(this, tableInfos).execute();
         }
         if (this.generateController) {

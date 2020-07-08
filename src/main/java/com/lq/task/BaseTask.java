@@ -1,4 +1,4 @@
-package com.lq.task.mybatis;
+package com.lq.task;
 
 import com.lq.SpringBootCli;
 import com.lq.util.FileUtil;
@@ -14,9 +14,9 @@ public abstract class BaseTask<R> {
         this.springBootCli = springBootCli;
     }
 
-    abstract R execute() throws Exception;
+    public abstract R execute() throws Exception;
 
-    abstract String getPackageName();
+    protected abstract String getPackageName();
 
     protected boolean checkDir() {
         File dir = new File(springBootCli.getRootPackagePath() + getPackageName());

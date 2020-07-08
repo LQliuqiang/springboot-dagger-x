@@ -3,6 +3,7 @@ package com.lq.task.mybatis;
 import com.lq.SpringBootCli;
 import com.lq.entity.TableFiledEntity;
 import com.lq.entity.TableInfo;
+import com.lq.task.BaseTask;
 import com.lq.util.JdbcUtil;
 import com.lq.util.StringUtil;
 
@@ -26,13 +27,13 @@ public final class CreateJavaBeanTask extends BaseTask<List<TableInfo>> {
     }
 
     @Override
-    List<TableInfo> execute() throws Exception {
+    public List<TableInfo> execute() throws Exception {
         return null;
     }
 
 
     @Override
-    String getPackageName() {
+    protected String getPackageName() {
         return "entity";
     }
 

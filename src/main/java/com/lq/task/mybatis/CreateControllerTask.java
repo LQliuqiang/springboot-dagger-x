@@ -2,6 +2,7 @@ package com.lq.task.mybatis;
 
 import com.lq.SpringBootCli;
 import com.lq.entity.TableInfo;
+import com.lq.task.BaseTask;
 import com.lq.util.StringUtil;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
     }
 
     @Override
-    String getPackageName() {
+    protected String getPackageName() {
         return "controller";
     }
 
