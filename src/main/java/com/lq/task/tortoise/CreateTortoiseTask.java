@@ -9,16 +9,22 @@ import java.io.IOException;
 
 public final class CreateTortoiseTask extends BaseTask<Boolean> {
 
+    private boolean isTenant;
 
-    public CreateTortoiseTask(SpringBootCli springBootCli) {
+    public CreateTortoiseTask(SpringBootCli springBootCli, boolean isTenant) {
         super(springBootCli);
+        this.isTenant = isTenant;
     }
 
     @Override
     public Boolean execute() throws Exception {
         if (checkDir()) {
            createCore();
-           createEntity();
+           if (isTenant){
+               createTenantEntity();
+           }else {
+               createEntity();
+           }
            createPresent();
         }
         return true;
@@ -28,7 +34,7 @@ public final class CreateTortoiseTask extends BaseTask<Boolean> {
         File dir = new File(springBootCli.getRootPackagePath() + getPackageName()+File.separator+"core");
         if (!dir.exists()) {
             if (dir.mkdir()){
-                String DesConstantClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"core;\n\n"+
+                String DesConstantClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"core;\n"+
                         "import sun.misc.BASE64Decoder;\n" +
                         "import sun.misc.BASE64Encoder;\n" +
                         "\n" +
@@ -43,14 +49,14 @@ public final class CreateTortoiseTask extends BaseTask<Boolean> {
                         "\n" +
                         "}";
                 createFile("core"+File.separator+"DesConstant.java", DesConstantClass);
-                String DesServiceClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"core;\n\n"+
+                String DesServiceClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"core;\n"+
                         "public interface DesService {\n" +
                         "\n" +
                         "    String decrypt(String data, String key);\n" +
                         "\n" +
                         "}";
                 createFile("core"+File.separator+"DesService.java", DesServiceClass);
-                String DesServiceImplClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"core;\n\n"+
+                String DesServiceImplClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"core;\n"+
                         "import  "+springBootCli.getPackageName() +"."+ getPackageName()+".present.AuthArgs;\n" +
                         "import org.springframework.stereotype.Component;\n" +
                         "\n" +
@@ -123,11 +129,432 @@ public final class CreateTortoiseTask extends BaseTask<Boolean> {
         }
     }
 
-    private void createEntity() throws IOException {
+    private void createEntity() throws IOException{
+            File dir = new File(springBootCli.getRootPackagePath() + getPackageName()+File.separator+"entity");
+            if (!dir.exists()) {
+                if (dir.mkdir()){
+                    String TokenInfoClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"entity;\n"
+                            +"import com.fasterxml.jackson.annotation.JsonIgnore;\n" +
+                            "\n" +
+                            "import java.io.Serializable;\n" +
+                            "\n" +
+                            "public class TokenInfo implements Serializable {\n" +
+                            "\n" +
+                            "    private static final long serialVersionUID = 1522922559629798319L;\n" +
+                            "\n" +
+                            "    @JsonIgnore\n" +
+                            "    private String tokenKey; //用户id\n" +
+                            "    private String tokenValue;\n" +
+                            "    private String permissionTags; //权限标记\n" +
+                            "    private String permissionIds; //权限id\n" +
+                            "    private String permissionTypes; //权限类型\n" +
+                            "    private String roleIds; //角色标记\n" +
+                            "    private UserInfo userInfo;\n" +
+                            "\n" +
+                            "    public TokenInfo() {\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getTokenKey() {\n" +
+                            "        return tokenKey;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setTokenKey(String tokenKey) {\n" +
+                            "        this.tokenKey = tokenKey;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getTokenValue() {\n" +
+                            "        return tokenValue;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setTokenValue(String tokenValue) {\n" +
+                            "        this.tokenValue = tokenValue;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getPermissionTags() {\n" +
+                            "        return permissionTags;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPermissionTags(String permissionTags) {\n" +
+                            "        this.permissionTags = permissionTags;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getPermissionIds() {\n" +
+                            "        return permissionIds;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPermissionIds(String permissionIds) {\n" +
+                            "        this.permissionIds = permissionIds;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getPermissionTypes() {\n" +
+                            "        return permissionTypes;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPermissionTypes(String permissionTypes) {\n" +
+                            "        this.permissionTypes = permissionTypes;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "\n" +
+                            "    public String getRoleIds() {\n" +
+                            "        return roleIds;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setRoleIds(String roleIds) {\n" +
+                            "        this.roleIds = roleIds;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public UserInfo getUserInfo() {\n" +
+                            "        return userInfo;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setUserInfo(UserInfo userInfo) {\n" +
+                            "        this.userInfo = userInfo;\n" +
+                            "    }\n" +
+                            "}";
+                    createFile("entity"+File.separator+"TokenInfo.java", TokenInfoClass);
+                    String BaseInfoClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"entity;\n"
+                            +"import java.io.Serializable;\n" +
+                            "\n" +
+                            "public class BaseInfo implements Serializable {\n" +
+                            "\n" +
+                            "    protected String createDate;\n" +
+                            "    protected String updateDate;\n" +
+                            "\n" +
+                            "    public String getCreateDate() {\n" +
+                            "        return createDate;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setCreateDate(String createDate) {\n" +
+                            "        this.createDate = createDate;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getUpdateDate() {\n" +
+                            "        return updateDate;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setUpdateDate(String updateDate) {\n" +
+                            "        this.updateDate = updateDate;\n" +
+                            "    }\n" +
+                            "}";
+                    createFile("entity"+File.separator+"BaseInfo.java", BaseInfoClass);
+                    String AuthUserClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"entity;\n"
+                            +"import org.hibernate.validator.constraints.Length;\n" +
+                            "\n" +
+                            "import javax.validation.constraints.NotBlank;\n" +
+                            "import javax.validation.constraints.Pattern;\n" +
+                            "\n" +
+                            "public class AuthUser extends BaseInfo {\n" +
+                            "\n" +
+                            "    private static final long serialVersionUID = 1522911159622293319L;\n" +
+                            "\n" +
+                            "    @NotBlank(message=\"用户名不能为空\")\n" +
+                            "    @Length(min = 6,max = 16,message = \"用户名长度6~8\")\n" +
+                            "    @Pattern(regexp=\"^[a-zA-Z][a-zA-Z0-9]*$\",message=\"以英文字母开头且只能包含英文字母与数字\")\n" +
+                            "    protected String username;\n" +
+                            "    @NotBlank(message=\"密码不能为空\")\n" +
+                            "    @Length(min = 8,max = 20,message = \"密码长度8~20\")\n" +
+                            "    protected String password;\n" +
+                            "\n" +
+                            "    public String getUsername() {\n" +
+                            "        return username;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setUsername(String username) {\n" +
+                            "        this.username = username;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getPassword() {\n" +
+                            "        return password;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPassword(String password) {\n" +
+                            "        this.password = password;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "}";
+                    createFile("entity"+File.separator+"AuthUser.java", AuthUserClass);
+                    String PermissionInfoClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"entity;\n"
+                            +"import org.hibernate.validator.constraints.Length;\n" +
+                            "\n" +
+                            "import javax.validation.constraints.NotBlank;\n" +
+                            "import javax.validation.constraints.Pattern;\n" +
+                            "\n" +
+                            "public class PermissionInfo extends BaseInfo {\n" +
+                            "\n" +
+                            "    private static final long serialVersionUID = 4568524983449336393L;\n" +
+                            "\n" +
+                            "    private Integer id;\n" +
+                            "    @NotBlank(message=\"权限名称不能为空\")\n" +
+                            "    @Length(max = 16,message = \"权限名称长度不能超过16位\")\n" +
+                            "    private String permissionName;\n" +
+                            "    @NotBlank(message=\"权限标记不能为空\")\n" +
+                            "    @Length(max = 32,message = \"权限标记长度不能超过32位\")\n" +
+                            "    @Pattern(regexp=\"^[a-zA-Z][a-zA-Z_]*$\",message=\"权限标记只能有英文字符与下划线组成\")\n" +
+                            "    private String permissionTag;\n" +
+                            "    private String permissionDesc;\n" +
+                            "    private String permissionType;\n" +
+                            "\n" +
+                            "    public Integer getId() {\n" +
+                            "        return id;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setId(Integer id) {\n" +
+                            "        this.id = id;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getPermissionName() {\n" +
+                            "        return permissionName;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPermissionName(String permissionName) {\n" +
+                            "        this.permissionName = permissionName;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getPermissionTag() {\n" +
+                            "        return permissionTag;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPermissionTag(String permissionTag) {\n" +
+                            "        this.permissionTag = permissionTag;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getPermissionDesc() {\n" +
+                            "        return permissionDesc;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPermissionDesc(String permissionDesc) {\n" +
+                            "        this.permissionDesc = permissionDesc;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getPermissionType() {\n" +
+                            "        return permissionType;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPermissionType(String permissionType) {\n" +
+                            "        this.permissionType = permissionType;\n" +
+                            "    }\n" +
+                            "}";
+                    createFile("entity"+File.separator+"PermissionInfo.java", PermissionInfoClass);
+                    String RoleInfoClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"entity;\n"
+                            +"import org.hibernate.validator.constraints.Length;\n" +
+                            "\n" +
+                            "import javax.validation.constraints.NotBlank;\n" +
+                            "import javax.validation.constraints.Pattern;\n" +
+                            "import java.util.List;\n" +
+                            "\n" +
+                            "public class RoleInfo extends BaseInfo {\n" +
+                            "\n" +
+                            "    private static final long serialVersionUID = 4568524933449445393L;\n" +
+                            "\n" +
+                            "    private Integer id;\n" +
+                            "    @NotBlank(message=\"角色名称不能为空\")\n" +
+                            "    @Length(max = 16,message = \"角色名称长度不能超过16位\")\n" +
+                            "    private String roleName;\n" +
+                            "    @Length(max = 32,message = \"权限标记长度不能超过32位\")\n" +
+                            "    @Pattern(regexp=\"^[a-zA-Z][a-zA-Z_]*$\",message=\"以英文字母开头且只能包含英文字母与下划线\")\n" +
+                            "    private String roleTag;\n" +
+                            "    private String roleDesc;\n" +
+                            "    private String roleType;\n" +
+                            "    @Pattern(regexp=\"^[,0-9-]+$\",message=\"添加权限格式不正确\")\n" +
+                            "    private String permissionIds;\n" +
+                            "    private List<PermissionInfo> permissionInfos;\n" +
+                            "\n" +
+                            "    public Integer getId() {\n" +
+                            "        return id;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setId(Integer id) {\n" +
+                            "        this.id = id;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getRoleName() {\n" +
+                            "        return roleName;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setRoleName(String roleName) {\n" +
+                            "        this.roleName = roleName;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getRoleTag() {\n" +
+                            "        return roleTag;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setRoleTag(String roleTag) {\n" +
+                            "        this.roleTag = roleTag;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getRoleDesc() {\n" +
+                            "        return roleDesc;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setRoleDesc(String roleDesc) {\n" +
+                            "        this.roleDesc = roleDesc;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getRoleType() {\n" +
+                            "        return roleType;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setRoleType(String roleType) {\n" +
+                            "        this.roleType = roleType;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getPermissionIds() {\n" +
+                            "        return permissionIds;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPermissionIds(String permissionIds) {\n" +
+                            "        this.permissionIds = permissionIds;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public List<PermissionInfo> getPermissionInfos() {\n" +
+                            "        return permissionInfos;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPermissionInfos(List<PermissionInfo> permissionInfos) {\n" +
+                            "        this.permissionInfos = permissionInfos;\n" +
+                            "    }\n" +
+                            "}";
+                    createFile("entity"+File.separator+"RoleInfo.java", RoleInfoClass);
+                    String UserInfoClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"entity;\n"
+                            +"import org.hibernate.validator.constraints.Length;\n" +
+                            "\n" +
+                            "import javax.management.relation.RoleInfo;\n" +
+                            "import javax.validation.constraints.Pattern;\n" +
+                            "import java.util.List;\n" +
+                            "\n" +
+                            "public class UserInfo extends AuthUser {\n" +
+                            "\n" +
+                            "    private static final long serialVersionUID = 8323524933449675393L;\n" +
+                            "\n" +
+                            "    private String id;\n" +
+                            "    @Length(max = 32,message = \"第一名称长度不能超过32位\")\n" +
+                            "    private String firstName;\n" +
+                            "    @Length(max = 32,message = \"第二名称长度不能超过32位\")\n" +
+                            "    private String lastName;\n" +
+                            "    @Pattern(regexp=\"^1[3|4|5|8][0-9]\\\\d{8}$\",message=\"电话号码格式不正确\")\n" +
+                            "    private String phone;\n" +
+                            "    @Pattern(regexp=\"\\\\w+([-+.]\\\\w+)*@\\\\w+([-.]\\\\w+)*\\\\.\\\\w+([-.]\\\\w+)*\",message=\"邮箱格式不正确\")\n" +
+                            "    private String email;\n" +
+                            "    @Length(max = 32,message = \"公司名称长度不能超过32位\")\n" +
+                            "    private String company;\n" +
+                            "    @Length(max = 32,message = \"部门名称长度不能超过32位\")\n" +
+                            "    private String department;\n" +
+                            "    @Length(max = 32,message = \"职位长度不能超过32位\")\n" +
+                            "    private String duty;\n" +
+                            "    @Pattern(regexp=\"^[,0-9-]+$\",message=\"添加角色格式不正确\")\n" +
+                            "    private String roleIds;\n" +
+                            "    private List<javax.management.relation.RoleInfo> roleInfos;\n" +
+                            "    private String headUrl;\n" +
+                            "    private String customInfo;\n" +
+                            "\n" +
+                            "    public String getId() {\n" +
+                            "        return id;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setId(String id) {\n" +
+                            "        this.id = id;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getDepartment() {\n" +
+                            "        return department;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setDepartment(String department) {\n" +
+                            "        this.department = department;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getFirstName() {\n" +
+                            "        return firstName;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setFirstName(String firstName) {\n" +
+                            "        this.firstName = firstName;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getLastName() {\n" +
+                            "        return lastName;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setLastName(String lastName) {\n" +
+                            "        this.lastName = lastName;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getPhone() {\n" +
+                            "        return phone;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPhone(String phone) {\n" +
+                            "        this.phone = phone;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getEmail() {\n" +
+                            "        return email;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setEmail(String email) {\n" +
+                            "        this.email = email;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getCompany() {\n" +
+                            "        return company;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setCompany(String company) {\n" +
+                            "        this.company = company;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getDuty() {\n" +
+                            "        return duty;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setDuty(String duty) {\n" +
+                            "        this.duty = duty;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getRoleIds() {\n" +
+                            "        return roleIds;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setRoleIds(String roleIds) {\n" +
+                            "        this.roleIds = roleIds;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public List<javax.management.relation.RoleInfo> getRoleInfos() {\n" +
+                            "        return roleInfos;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setRoleInfos(List<RoleInfo> roleInfos) {\n" +
+                            "        this.roleInfos = roleInfos;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getHeadUrl() {\n" +
+                            "        return headUrl;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setHeadUrl(String headUrl) {\n" +
+                            "        this.headUrl = headUrl;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public String getCustomInfo() {\n" +
+                            "        return customInfo;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setCustomInfo(String customInfo) {\n" +
+                            "        this.customInfo = customInfo;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "}";
+                    createFile("entity"+File.separator+"UserInfo.java", UserInfoClass);
+                }
+            }
+    }
+
+    private void createTenantEntity() throws IOException {
         File dir = new File(springBootCli.getRootPackagePath() + getPackageName()+File.separator+"entity");
         if (!dir.exists()) {
             if (dir.mkdir()){
-                String TokenInfoClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"entity;\n\n"+
+                String TokenInfoClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"entity;\n"+
                         "import com.fasterxml.jackson.annotation.JsonIgnore;\n" +
                         "\n" +
                         "import java.io.Serializable;\n" +
@@ -214,7 +641,7 @@ public final class CreateTortoiseTask extends BaseTask<Boolean> {
         File dir = new File(springBootCli.getRootPackagePath() + getPackageName()+File.separator+"present");
         if (!dir.exists()) {
             if (dir.mkdir()){
-                String AuthArgsClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"present;\n\n"+
+                String AuthArgsClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"present;\n"+
                         "import org.springframework.beans.factory.annotation.Value;\n" +
                         "import org.springframework.boot.context.properties.ConfigurationProperties;\n" +
                         "import org.springframework.stereotype.Component;\n" +
@@ -265,7 +692,7 @@ public final class CreateTortoiseTask extends BaseTask<Boolean> {
                         "    }\n" +
                         "}";
                 createFile("present"+File.separator+"AuthArgs.java", AuthArgsClass);
-                String RedisConfigClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"present;\n\n"+
+                String RedisConfigClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"present;\n"+
                         "import  "+springBootCli.getPackageName() +"."+ getPackageName()+".entity.TokenInfo;\n" +
                         "import org.springframework.context.annotation.Bean;\n" +
                         "import org.springframework.context.annotation.Configuration;\n" +
@@ -289,7 +716,7 @@ public final class CreateTortoiseTask extends BaseTask<Boolean> {
                         "    }\n" +
                         "}";
                 createFile("present"+File.separator+"RedisConfig.java", RedisConfigClass);
-                String RequiredPermissionClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"present;\n\n"+
+                String RequiredPermissionClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"present;\n"+
                         "import java.lang.annotation.*;\n" +
                         "\n" +
                         "@Target({ElementType.TYPE, ElementType.METHOD})\n" +
@@ -300,7 +727,7 @@ public final class CreateTortoiseTask extends BaseTask<Boolean> {
                         "    String value();\n" +
                         "}";
                 createFile("present"+File.separator+"RequiredPermission.java", RequiredPermissionClass);
-                String SecurityInterceptorClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"present;\n\n"+
+                String SecurityInterceptorClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"present;\n"+
                         "import  "+springBootCli.getPackageName() +"."+ getPackageName()+".core.DesConstant;\n" +
                         "import  "+springBootCli.getPackageName() +"."+ getPackageName()+".core.DesService;\n" +
                         "import "+springBootCli.getPackageName() +"."+ getPackageName()+".entity.TokenInfo;\n" +
@@ -373,6 +800,9 @@ public final class CreateTortoiseTask extends BaseTask<Boolean> {
                         "        TokenInfo tokenInfo = tokenInfoRedisTemplate.opsForValue().get(userId);\n" +
                         "        if (tokenInfo != null && tokenInfo.getTokenValue().replaceAll(\"\\\\s*\", \"\").equals(token.replaceAll(\"\\\\s*\", \"\"))) {\n" +
                         "            String permissions = tokenInfo.getPermissionTags();\n" +
+                        "            if (permissions==null){\n" +
+                        "                return false;\n" +
+                        "            }"+
                         "            if (handler instanceof HandlerMethod) {\n" +
                         "                HandlerMethod handlerMethod = (HandlerMethod) handler;\n" +
                         "                RequiredPermission requiredPermission = handlerMethod.getMethod().getAnnotation(RequiredPermission.class);\n" +
@@ -390,7 +820,7 @@ public final class CreateTortoiseTask extends BaseTask<Boolean> {
                         "\n" +
                         "}";
                 createFile("present"+File.separator+"SecurityInterceptor.java", SecurityInterceptorClass);
-                String WebAuthConfigurerClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"present;\n\n"+
+                String WebAuthConfigurerClass = "package "+ springBootCli.getPackageName() +"."+ getPackageName()+"."+"present;\n"+
                         "import org.springframework.context.annotation.Bean;\n" +
                         "import org.springframework.context.annotation.Configuration;\n" +
                         "import org.springframework.web.servlet.config.annotation.InterceptorRegistry;\n" +

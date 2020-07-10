@@ -66,9 +66,18 @@ public class SpringBootCli {
         createMybatis(null, tableInfos);
     }
 
-    public void useTortoise() throws Exception {
+    public void useTortoise(boolean isTenant) throws Exception {
         new CheckDependency(this).execute(CheckDependency.REDIS_FLAG);
-        new CreateTortoiseTask(this).execute();
+        new CreateTortoiseTask(this,isTenant).execute();
+        System.out.println("\n\n---------------------------------");
+        System.err.println("tortoise config application.yml");
+        String sb = "auth-args:\n" +
+                "  secret-token-key: auth2090\n" +
+                "  split-symbol: Symbol\n" +
+                "  decrypt-mode: python\n" +
+                "  exclude-url-paths: /urlPath";
+        System.out.println(sb);
+        System.out.println("\n\n---------------------------------");
     }
 
     public void createMybatis(String... tableNames) throws Exception {

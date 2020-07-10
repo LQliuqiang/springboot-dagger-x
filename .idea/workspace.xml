@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3933e037-1e78-4a08-8be3-eb27aebf4b99" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/tortoise/CreateTortoiseTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/tortoise/CreateTortoiseTask.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,8 +34,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.lq.task.validate" />
       <recent name="com.lq.task.tortoise" />
+      <recent name="com.lq.task.validate" />
       <recent name="com.lq" />
       <recent name="com.lq.task" />
     </key>
@@ -60,7 +62,9 @@
       <workItem from="1591748886733" duration="1127000" />
       <workItem from="1591769249987" duration="77000" />
       <workItem from="1594100882185" duration="795000" />
-      <workItem from="1594174987014" duration="1178000" />
+      <workItem from="1594174987014" duration="2252000" />
+      <workItem from="1594196863531" duration="5000" />
+      <workItem from="1594369193053" duration="511000" />
     </task>
     <servers />
   </component>
