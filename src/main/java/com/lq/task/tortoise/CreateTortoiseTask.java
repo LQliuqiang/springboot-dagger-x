@@ -1,6 +1,5 @@
 package com.lq.task.tortoise;
 
-
 import com.lq.SpringBootCli;
 import com.lq.task.BaseTask;
 
@@ -143,12 +142,12 @@ public final class CreateTortoiseTask extends BaseTask<Boolean> {
                             "    private static final long serialVersionUID = 1522922559629798319L;\n" +
                             "\n" +
                             "    @JsonIgnore\n" +
-                            "    private String tokenKey; //用户id\n" +
+                            "    private String tokenKey;\n" +
                             "    private String tokenValue;\n" +
-                            "    private String permissionTags; //权限标记\n" +
-                            "    private String permissionIds; //权限id\n" +
-                            "    private String permissionTypes; //权限类型\n" +
-                            "    private String roleIds; //角色标记\n" +
+                            "    private String permissionTags;\n" +
+                            "    private String permissionIds;\n" +
+                            "    private String permissionTypes;\n" +
+                            "    private String roleIds;\n" +
                             "    private UserInfo userInfo;\n" +
                             "\n" +
                             "    public TokenInfo() {\n" +
@@ -843,6 +842,7 @@ public final class CreateTortoiseTask extends BaseTask<Boolean> {
                         "    public void addInterceptors(InterceptorRegistry registry) {\n" +
                         "        registry.addInterceptor(securityInterceptor())\n" +
                         "                .addPathPatterns(\"/**\")\n" +
+                        "                .excludePathPatterns(\"/swagger-resources/**\", \"/webjars/**\", \"/v2/**\", \"/swagger-ui.html/**\")\n"+
                         "                .excludePathPatterns(authArgs.getExcludeUrlPaths().split(\",\"));\n" +
                         "    }\n" +
                         "}";

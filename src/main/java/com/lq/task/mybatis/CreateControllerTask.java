@@ -1,6 +1,7 @@
 package com.lq.task.mybatis;
 
 import com.lq.SpringBootCli;
+import com.lq.entity.TableFiledEntity;
 import com.lq.entity.TableInfo;
 import com.lq.task.BaseTask;
 import com.lq.util.StringUtil;
@@ -38,9 +39,7 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
         sb.append("package ").append(springBootCli.getPackageName()).append(".controller;\n\n")
                 .append("import ").append(springBootCli.getPackageName()).append(".entity.").append(transformTableInfo.getTableName())
                 .append(";\nimport ").append(springBootCli.getPackageName()).append(".util.CommentResponse");
-        if (springBootCli.isUsePage()) {
-            sb.append(";\nimport ").append(springBootCli.getPackageName()).append(".util.CommentPageResponse;\nimport java.util.List");
-        }
+        sb.append(";\nimport ").append(springBootCli.getPackageName()).append(".util.CommentPageResponse;\nimport java.util.List");
         sb.append(";\nimport ").append(springBootCli.getPackageName()).append(".util.WebUtil")
                 .append(";\nimport ").append(springBootCli.getPackageName()).append(".service.")
                 .append(transformTableInfo.getTableName())
@@ -51,7 +50,8 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
                 .append(transformTableInfo.getTableName())
                 .append("Service ").append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
                 .append("Service;\n");
-        transformTableInfo.getFiledEntities().stream()
+        List<TableFiledEntity> filedEntities = transformTableInfo.getFiledEntities();
+        filedEntities.stream()
                 .filter(tableFiledEntity -> tableFiledEntity.getKey().equals("PRI"))
                 .findFirst()
                 .ifPresent(priKey -> {
@@ -69,22 +69,49 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
                             .append(transformTableInfo.getTableName()).append("(")
                             .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append(") ? CommentResponse.success(")
                             .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append(") : CommentResponse.fail();\n\t\t}\n\t}\n\n");
-                    if (springBootCli.isUsePage()) {
-                        sb.append("\t@GetMapping(\"/queryAll")
-                                .append(transformTableInfo.getTableName())
-                                .append("\")\n\tpublic CommentPageResponse")
-                                .append(" queryAll")
-                                .append(transformTableInfo.getTableName())
-                                .append("(@RequestParam(value = \"page\", required = false, defaultValue = \"1\") Integer page,\n\t\t\t\t\t\t\t\t\t\t\t\t\t@RequestParam(value = \"pageSize\", required = false, defaultValue = \"10\") Integer pageSize){\n\t\tList<")
-                                .append(transformTableInfo.getTableName())
-                                .append("> ").append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("s = ")
-                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("Service.queryAll")
-                                .append(transformTableInfo.getTableName())
-                                .append("(page,pageSize);\n\t\tint totalCount = ")
-                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("Service.queryAll")
-                                .append(transformTableInfo.getTableName()).append("Count();\n\t\tint totalPage = totalCount / pageSize + ((totalCount % pageSize > 0) ? 1 : 0);\n\t\treturn CommentPageResponse.success(")
-                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("s, totalPage, totalCount, page, pageSize);\n\t}\n\n");
+
+                    boolean conditionFlag = false;
+                    for (int x = 1; x < filedEntities.size(); x++) {
+                        if (filedEntities.get(x).getType().equals("String")) {
+                            conditionFlag = true;
+                            break;
+                        }
                     }
+                    sb.append("\t@GetMapping(\"/queryAll")
+                            .append(transformTableInfo.getTableName())
+                            .append("\")\n\tpublic CommentPageResponse")
+                            .append(" queryAll")
+                            .append(transformTableInfo.getTableName()).append("(");
+                    for (int x = 1; x < filedEntities.size(); x++) {
+                        if (filedEntities.get(x).getType().equals("String")) {
+                            sb.append("@RequestParam(value = \"")
+                                    .append(filedEntities.get(x).getName())
+                                    .append("\", required = false) String ").append(filedEntities.get(x).getName()).append(",\n\t\t\t\t\t\t\t\t\t\t\t\t");
+                        }
+                    }
+                    sb.append("@RequestParam(value = \"page\", required = false, defaultValue = \"1\") Integer page,\n\t\t\t\t\t\t\t\t\t\t\t\t@RequestParam(value = \"pageSize\", required = false, defaultValue = \"10\") Integer pageSize){\n\t\tList<")
+                            .append(transformTableInfo.getTableName())
+                            .append("> ").append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("s = ")
+                            .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("Service.queryAll")
+                            .append(transformTableInfo.getTableName()).append("(");
+                    for (int x = 1; x < filedEntities.size(); x++) {
+                        if (filedEntities.get(x).getType().equals("String")) {
+                            sb.append(filedEntities.get(x).getName()).append(",");
+                        }
+                    }
+                    sb.append("page,pageSize);\n\t\tint totalCount = ")
+                            .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("Service.queryAll")
+                            .append(transformTableInfo.getTableName()).append("Count(");
+                    for (int x = 1; x < filedEntities.size(); x++) {
+                        if (filedEntities.get(x).getType().equals("String")) {
+                            sb.append(filedEntities.get(x).getName()).append(",");
+                        }
+                    }
+                    if (conditionFlag) {
+                        sb.deleteCharAt(sb.lastIndexOf(","));
+                    }
+                    sb.append(");\n\t\tint totalPage = totalCount / pageSize + ((totalCount % pageSize > 0) ? 1 : 0);\n\t\treturn CommentPageResponse.success(")
+                            .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("s, totalPage, totalCount, page, pageSize);\n\t}\n\n");
                     sb
                             .append("\t@GetMapping(\"/query")
                             .append(transformTableInfo.getTableName())

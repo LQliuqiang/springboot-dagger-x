@@ -2,6 +2,7 @@ package com.lq.task.mybatis;
 
 
 import com.lq.SpringBootCli;
+import com.lq.entity.TableFiledEntity;
 import com.lq.entity.TableInfo;
 import com.lq.task.BaseTask;
 import com.lq.util.StringUtil;
@@ -35,12 +36,10 @@ public final class CreateMapperTask extends BaseTask<Boolean> {
         sb.append("package ").append(springBootCli.getPackageName()).append(".").append(getPackageName()).append(";\n\n")
                 .append("import org.apache.ibatis.annotations.Param;\n")
                 .append("import ").append(springBootCli.getPackageName()).append(".entity.")
-                .append(transformTableInfo.getTableName()).append(";");
-        if (springBootCli.isUsePage()) {
-            sb.append("\nimport java.util.List;");
-        }
-        sb.append("\n\npublic interface ").append(transformTableInfo.getTableName()).append("Mapper {\n\n");
-        transformTableInfo.getFiledEntities().stream()
+                .append(transformTableInfo.getTableName()).append(";\nimport java.util.List;\n\npublic interface ")
+                .append(transformTableInfo.getTableName()).append("Mapper {\n\n");
+        List<TableFiledEntity> filedEntities = transformTableInfo.getFiledEntities();
+        filedEntities.stream()
                 .filter(tableFiledEntity -> tableFiledEntity.getKey().equals("PRI"))
                 .findFirst()
                 .ifPresent(priKey -> {
@@ -51,12 +50,34 @@ public final class CreateMapperTask extends BaseTask<Boolean> {
                                     .append(" ")
                                     .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
                                     .append(");\n\n\t");
-                            if (springBootCli.isUsePage()) {
-                                sb.append("List<").append(transformTableInfo.getTableName()).append("> queryAll")
-                                        .append(transformTableInfo.getTableName())
-                                        .append("(@Param(\"page\")Integer page,@Param(\"pageSize\")Integer pageSize);\n\n\t")
-                                        .append("Integer queryAll").append(transformTableInfo.getTableName()).append("Count();\n\n\t");
+                            sb.append("List<").append(transformTableInfo.getTableName()).append("> queryAll")
+                                    .append(transformTableInfo.getTableName());
+                            sb.append("(");
+                            for (int x = 1; x < filedEntities.size(); x++) {
+                                if (filedEntities.get(x).getType().equals("String")) {
+                                    sb.append("@Param(\"")
+                                            .append(filedEntities.get(x).getName())
+                                            .append("\")String ")
+                                            .append(filedEntities.get(x).getName()).append(",\n\t\t\t\t\t\t\t");
+                                }
                             }
+                            sb.append("@Param(\"page\")Integer page, @Param(\"pageSize\")Integer pageSize);\n\n\t")
+                                    .append("Integer queryAll").append(transformTableInfo.getTableName()).append("Count(");
+                            for (int x = 1; x < filedEntities.size(); x++) {
+                                if (filedEntities.get(x).getType().equals("String")) {
+                                    sb.append("@Param(\"")
+                                            .append(filedEntities.get(x).getName())
+                                            .append("\")String ")
+                                            .append(filedEntities.get(x).getName()).append(",\n\t\t\t\t\t\t\t");
+                                }
+                            }
+                            for (int x = 1; x < filedEntities.size(); x++) {
+                                if (filedEntities.get(x).getType().equals("String")) {
+                                    sb.deleteCharAt(sb.lastIndexOf(","));
+                                    break;
+                                }
+                            }
+                            sb.append(");\n\n\t");
                             sb.append(transformTableInfo.getTableName())
                                     .append(" query")
                                     .append(transformTableInfo.getTableName())

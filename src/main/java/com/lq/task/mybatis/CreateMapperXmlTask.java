@@ -27,14 +27,14 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
         File mapperDir = new File(mapperResourcesPath);
         if (!mapperDir.exists()) {
             boolean mkdirs = mapperDir.mkdirs();
-            if (!mkdirs){
+            if (!mkdirs) {
                 return false;
             }
         }
         for (TableInfo tableInfo : tableInfos) {
             String mapperXml = tableInfo2MapperXml(tableInfo);
-            File file = new File(mapperResourcesPath + tableInfo.getTransformTableInfo().getTableName()+ "Mapper.xml");
-            if (!file.exists()||springBootCli.isForceCover()){
+            File file = new File(mapperResourcesPath + tableInfo.getTransformTableInfo().getTableName() + "Mapper.xml");
+            if (!file.exists() || springBootCli.isForceCover()) {
                 FileUtil.createWriteFile(file, mapperXml);
             }
         }
@@ -54,6 +54,7 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
                 "        PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\"\n" +
                 "        \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n<mapper namespace=\"";
         StringBuilder sb = new StringBuilder(mapperXmlHeader);
+        //数据库原型字段
         List<TableFiledEntity> filedEntities = tableInfo.getFiledEntities();
         StringBuilder sqlField = new StringBuilder();
         for (TableFiledEntity filedEntity : filedEntities) {
@@ -115,17 +116,45 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
                         .append("=#{")
                         .append(priKey.getName())
                         .append("}\n\t</select>");
-                if (springBootCli.isUsePage()) {
-                    sb.append("\n\n\t<select id=\"queryAll")
-                            .append(transformTableInfo.getTableName())
-                            .append("\" resultMap=\"BaseResultMap\">\n\t\tselect <include refid=\"")
-                            .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
-                            .append("ColumnSql\"/>\n\t\tfrom ")
-                            .append(tableInfo.getTableName())
-                            .append("\n\t\tlimit #{page},#{pageSize}\n\t</select>\n\n\t<select id=\"queryAll")
-                            .append(transformTableInfo.getTableName()).append("Count\" resultType=\"java.lang.Integer\">\n\t\tselect count(*) from ")
-                            .append(tableInfo.getTableName()).append("\n\t</select>");
-
+                boolean conditionFlag = false;
+                for (int x = 1; x < filedEntities2.size(); x++) {
+                    if (filedEntities2.get(x).getType().equals("String")) {
+                        conditionFlag = true;
+                        break;
+                    }
+                }
+                sb.append("\n\n\t<select id=\"queryAll")
+                        .append(transformTableInfo.getTableName())
+                        .append("\" resultMap=\"BaseResultMap\">\n\t\tselect <include refid=\"")
+                        .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                        .append("ColumnSql\"/>\n\t\tfrom ")
+                        .append(tableInfo.getTableName());
+                if (conditionFlag) {
+                    sb.append("\n\t\t<include refid=\"queryCondition\"/>");
+                }
+                sb.append("\n\t\tlimit #{page},#{pageSize}\n\t</select>\n\n\t<select id=\"queryAll")
+                        .append(transformTableInfo.getTableName()).append("Count\" resultType=\"java.lang.Integer\">\n\t\tselect count(*) from ")
+                        .append(tableInfo.getTableName());
+                if (conditionFlag) {
+                    sb.append("\n\t\t<include refid=\"queryCondition\"/>");
+                }
+                sb.append("\n\t</select>");
+                if (conditionFlag) {
+                    sb.append("\n\n\t<sql id=\"queryCondition\">\n\t\t<where>");
+                    for (int x = 1; x < filedEntities2.size(); x++) {
+                        if (filedEntities2.get(x).getType().equals("String")) {
+                            sb.append("\n\t\t\t<if test=\"")
+                                    .append(filedEntities2.get(x).getName())
+                                    .append("!=null and ")
+                                    .append(filedEntities2.get(x).getName())
+                                    .append("!=''\">\n\t\t\t\tand ")
+                                    .append(filedEntities.get(x).getName())
+                                    .append(" like '%${")
+                                    .append(filedEntities2.get(x).getName())
+                                    .append("}%'\n\t\t\t</if>");
+                        }
+                    }
+                    sb.append("\n\t\t</where>\n\t</sql>");
                 }
                 sb.append("\n\n\t<delete id=\"delete")
                         .append(transformTableInfo.getTableName())

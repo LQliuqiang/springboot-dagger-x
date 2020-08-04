@@ -30,7 +30,6 @@ public class SpringBootCli {
     private String filterTableNameStr;
     private boolean generateController;
     private boolean useRedis;
-    private boolean usePage;
     private boolean forceCover;
     private String projectPath;
     private String packageName;
@@ -46,7 +45,6 @@ public class SpringBootCli {
         this.filterTableNameStr = builder.filterTableNameStr;
         this.generateController = builder.generateController;
         this.useRedis = builder.useRedis;
-        this.usePage = builder.usePage;
         this.forceCover = builder.forceCover;
         String path = new File(builder.aClass.getResource("").getPath()).getPath();
         this.projectPath = path.substring(0, path.indexOf(File.separator + "target" + File.separator));
@@ -55,7 +53,6 @@ public class SpringBootCli {
                 File.separator + new File(builder.aClass.getName()).getPath().replace(".", File.separator) + ".java";
         this.rootPackagePath = filePath.replace(builder.aClass.getSimpleName() + ".java", "");
     }
-
 
     public void initSpringBoot(String... filterTableNames) throws Exception {
         new CreatePomXmlTask(this).execute();
@@ -67,7 +64,7 @@ public class SpringBootCli {
     }
 
     public void useTortoise(boolean isTenant) throws Exception {
-        new CheckDependency(this).execute(CheckDependency.REDIS_FLAG);
+        new CheckDependency(this).execute(CheckDependency.TORTOISE_FLAG);
         new CreateTortoiseTask(this,isTenant).execute();
         System.out.println("\n\n---------------------------------");
         System.err.println("tortoise config application.yml");
@@ -116,11 +113,6 @@ public class SpringBootCli {
         if (this.generateController) {
             new CreateControllerTask(this, tableInfos).execute();
         }
-    }
-
-    public void useRedis() throws Exception {
-        this.useRedis = true;
-        new CreatePomXmlTask(this).execute();
     }
 
     public JdbcConfigEntity getJdbcConfigEntity() {
@@ -175,10 +167,6 @@ public class SpringBootCli {
         return forceCover;
     }
 
-    public boolean isUsePage() {
-        return usePage;
-    }
-
     public void setGenerateController(boolean generateController) {
         this.generateController = generateController;
     }
@@ -202,9 +190,9 @@ public class SpringBootCli {
         private String fastJsonVersion = "1.2.47";
         private String filterTableNameStr;
         private boolean generateController;
-        private boolean usePage;
         private boolean useRedis;
         private boolean forceCover;
+
 
         public Builder(Class<?> aClass, JdbcConfigEntity jdbcConfigEntity) {
             this.jdbcConfigEntity = jdbcConfigEntity;
@@ -253,11 +241,6 @@ public class SpringBootCli {
 
         public Builder setForceCover(boolean forceCover) {
             this.forceCover = forceCover;
-            return this;
-        }
-
-        public Builder setUsePage(boolean usePage) {
-            this.usePage = usePage;
             return this;
         }
 

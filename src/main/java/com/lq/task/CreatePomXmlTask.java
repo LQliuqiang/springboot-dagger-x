@@ -18,9 +18,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 创建pom文件
- */
 public final class CreatePomXmlTask {
 
     private SpringBootCli springBootCli;
@@ -96,14 +93,30 @@ public final class CreatePomXmlTask {
             Element springBootStarter = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter");
             dependenciesNode.appendChild(springBootStarter);
         }
-
         if (!dependencies.contains("spring-boot-starter-web")) {
             Element springBootWeb = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-web");
             dependenciesNode.appendChild(springBootWeb);
-            if (!dependencies.contains("fastjson")) {
-                Element fastjson = createDependencyElm(document, "com.alibaba", "fastjson", springBootCli.getFastJsonVersion());
-                dependenciesNode.appendChild(fastjson);
-            }
+        }
+        if (!dependencies.contains("spring-boot-starter-actuator")) {
+            Element springBootWeb = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-actuator");
+            dependenciesNode.appendChild(springBootWeb);
+        }
+        if (!dependencies.contains("spring-boot-configuration-processor")) {
+            Element dependencyElm = document.createElement("dependency");
+            Element groupIdElm = document.createElement("groupId");
+            groupIdElm.setTextContent("org.springframework.boot");
+            Element artifactIdElm = document.createElement("artifactId");
+            artifactIdElm.setTextContent("spring-boot-configuration-processor");
+            Element optionalElm = document.createElement("optional");
+            optionalElm.setTextContent("true");
+            dependencyElm.appendChild(groupIdElm);
+            dependencyElm.appendChild(artifactIdElm);
+            dependencyElm.appendChild(optionalElm);
+            dependenciesNode.appendChild(dependencyElm);
+        }
+        if (!dependencies.contains("fastjson")) {
+            Element fastjson = createDependencyElm(document, "com.alibaba", "fastjson", springBootCli.getFastJsonVersion());
+            dependenciesNode.appendChild(fastjson);
         }
         if (!dependencies.contains("mybatis-spring-boot-starter")) {
             Element mybatis = createDependencyElm(document, "org.mybatis.spring.boot", "mybatis-spring-boot-starter", springBootCli.getMybatisVersion());

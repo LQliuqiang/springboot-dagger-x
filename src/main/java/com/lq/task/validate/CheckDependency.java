@@ -21,6 +21,7 @@ import java.util.List;
 public class CheckDependency {
 
     public static final int REDIS_FLAG = 1;
+    public static final int TORTOISE_FLAG = 2;
 
     private SpringBootCli springBootCli;
 
@@ -60,7 +61,7 @@ public class CheckDependency {
                 }
             }
         }
-        if (!dependencies.contains("spring-boot-starter-data-redis") && flag == REDIS_FLAG) {
+        if (!dependencies.contains("spring-boot-starter-data-redis") && (flag == REDIS_FLAG || flag == TORTOISE_FLAG)) {
             Element redis = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-data-redis");
             dependenciesNode.appendChild(redis);
             if (!dependencies.contains("jackson-databind")) {
@@ -77,10 +78,38 @@ public class CheckDependency {
                     "\n    jedis: \n      pool: " +
                     "\n        max-idle: " + "100" +
                     "\n        min-idle: " + "50" +
-                    "\n        max-active: " + "150"+
+                    "\n        max-active: " + "150" +
                     "\n    password: " + "123456";
             System.out.println(sb);
             System.out.println("\n\n---------------------------------");
+        }
+        if (flag == TORTOISE_FLAG) {
+            if (!dependencies.contains("spring-boot-starter")) {
+                Element springBootStarter = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter");
+                dependenciesNode.appendChild(springBootStarter);
+            }
+            if (!dependencies.contains("spring-boot-starter-web")) {
+                Element springBootWeb = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-web");
+                dependenciesNode.appendChild(springBootWeb);
+            }
+            if (!dependencies.contains("spring-boot-starter-actuator")) {
+                Element springBootWeb = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-actuator");
+                dependenciesNode.appendChild(springBootWeb);
+            }
+            if (!dependencies.contains("spring-boot-configuration-processor")) {
+                Element dependencyElm = document.createElement("dependency");
+                Element groupIdElm = document.createElement("groupId");
+                groupIdElm.setTextContent("org.springframework.boot");
+                Element artifactIdElm = document.createElement("artifactId");
+                artifactIdElm.setTextContent("spring-boot-configuration-processor");
+                Element optionalElm = document.createElement("optional");
+                optionalElm.setTextContent("true");
+                dependencyElm.appendChild(groupIdElm);
+                dependencyElm.appendChild(artifactIdElm);
+                dependencyElm.appendChild(optionalElm);
+                dependenciesNode.appendChild(dependencyElm);
+            }
+            writeXml(document, pomFile);
         }
     }
 

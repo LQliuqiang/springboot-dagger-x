@@ -32,7 +32,7 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                     serviceImplDir.mkdir();
                 }
                 File file = new File(springBootCli.getRootPackagePath() + getPackageName() + File.separator + "impl" + File.separator + tableInfo.getTransformTableInfo().getTableName() + "ServiceImpl.java");
-                if (!file.exists()||springBootCli.isForceCover()) {
+                if (!file.exists() || springBootCli.isForceCover()) {
                     FileUtil.createWriteFile(file, serviceImpl);
                 }
             }
@@ -45,12 +45,10 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
         StringBuilder sb = new StringBuilder();
         sb.append("package ").append(springBootCli.getPackageName()).append(".").append(getPackageName())
                 .append(";\n\nimport ").append(springBootCli.getPackageName()).append(".entity.")
-                .append(transformTableInfo.getTableName()).append(";");
-        if (springBootCli.isUsePage()) {
-            sb.append("\nimport java.util.List;");
-        }
-        sb.append("\n\npublic interface ").append(transformTableInfo.getTableName()).append("Service {\n\n");
-        transformTableInfo.getFiledEntities().stream()
+                .append(transformTableInfo.getTableName()).append(";\nimport java.util.List;\n\npublic interface ")
+                .append(transformTableInfo.getTableName()).append("Service {\n\n");
+        List<TableFiledEntity> filedEntities = transformTableInfo.getFiledEntities();
+        filedEntities.stream()
                 .filter(tableFiledEntity -> tableFiledEntity.getKey().equals("PRI"))
                 .findFirst()
                 .ifPresent(priKey -> {
@@ -61,12 +59,27 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                                     .append(" ")
                                     .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
                                     .append(");\n\n\t");
-                            if (springBootCli.isUsePage()) {
-                                sb.append("List<").append(transformTableInfo.getTableName()).append("> queryAll")
-                                        .append(transformTableInfo.getTableName())
-                                        .append("(Integer page,Integer pageSize);\n\n\t")
-                                        .append("Integer queryAll").append(transformTableInfo.getTableName()).append("Count();\n\n\t");
+                            sb.append("List<").append(transformTableInfo.getTableName()).append("> queryAll")
+                                    .append(transformTableInfo.getTableName()).append("(");
+                            for (int x = 1; x < filedEntities.size(); x++) {
+                                if (filedEntities.get(x).getType().equals("String")) {
+                                    sb.append("String ").append(filedEntities.get(x).getName()).append(",");
+                                }
                             }
+                            sb.append("Integer page,Integer pageSize);\n\n\t")
+                                    .append("Integer queryAll").append(transformTableInfo.getTableName()).append("Count(");
+                            for (int x = 1; x < filedEntities.size(); x++) {
+                                if (filedEntities.get(x).getType().equals("String")) {
+                                    sb.append("String ").append(filedEntities.get(x).getName()).append(",");
+                                }
+                            }
+                            for (int x = 1; x < filedEntities.size(); x++) {
+                                if (filedEntities.get(x).getType().equals("String")) {
+                                    sb.deleteCharAt(sb.lastIndexOf(","));
+                                    break;
+                                }
+                            }
+                            sb.append(");\n\n\t");
                             sb.append(transformTableInfo.getTableName())
                                     .append(" query")
                                     .append(transformTableInfo.getTableName())
@@ -111,18 +124,16 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
         if (springBootCli.isUseRedis()) {
             sb.append(";\nimport org.springframework.data.redis.core.RedisTemplate");
         }
-        if (springBootCli.isUsePage()) {
-            sb.append(";\nimport java.util.List");
-        }
-        sb.append(";\nimport javax.annotation.Resource;\nimport org.springframework.stereotype.Service;\nimport ")
+        sb.append(";\nimport java.util.List;\nimport javax.annotation.Resource;\nimport org.springframework.stereotype.Service;\nimport ")
                 .append(springBootCli.getPackageName()).append(".mapper.").append(transformTableInfo.getTableName())
                 .append("Mapper;\n\n@Service\n")
                 .append("public class ").append(transformTableInfo.getTableName()).append("ServiceImpl implements ")
                 .append(transformTableInfo.getTableName())
                 .append("Service{\n\n\t@Resource\n\tprivate ").append(transformTableInfo.getTableName())
                 .append("Mapper ").append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("Mapper;\n");
+        List<TableFiledEntity> filedEntities = transformTableInfo.getFiledEntities();
         if (springBootCli.isUseRedis()) {
-            TableFiledEntity pri = transformTableInfo.getFiledEntities().stream()
+            TableFiledEntity pri = filedEntities.stream()
                     .filter(tableFiledEntity -> tableFiledEntity.getKey().equals("PRI"))
                     .findFirst().orElseGet(TableFiledEntity::new);
             if (pri.getType() != null) {
@@ -133,7 +144,7 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
             sb.append(transformTableInfo.getTableName()).append("> ")
                     .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("RedisTemplate;\n");
         }
-        transformTableInfo.getFiledEntities().stream()
+        filedEntities.stream()
                 .filter(tableFiledEntity -> tableFiledEntity.getKey().equals("PRI"))
                 .findFirst()
                 .ifPresent(priKey -> {
@@ -164,20 +175,53 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                                 .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append(");\n\t}\n\n");
                     }
 
-                    if (springBootCli.isUsePage()) {
-                        sb.append("\t@Override\n\tpublic List<").append(transformTableInfo.getTableName()).append("> queryAll")
-                                .append(transformTableInfo.getTableName())
-                                .append("(Integer page,Integer pageSize){\n\t\tpage = (page - 1) * pageSize;\n\t\treturn ")
-                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
-                                .append("Mapper.queryAll")
-                                .append(transformTableInfo.getTableName())
-                                .append("(page,pageSize);\n\t}\n\n")
-                                .append("\t@Override\n\tpublic Integer queryAll").append(transformTableInfo.getTableName()).append("Count(){\n\t\treturn ")
-                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
-                                .append("Mapper.queryAll")
-                                .append(transformTableInfo.getTableName())
-                                .append("Count();\n\t}\n\n");
+                    boolean conditionFlag = false;
+                    for (int x = 1; x < filedEntities.size(); x++) {
+                        if (filedEntities.get(x).getType().equals("String")) {
+                            conditionFlag = true;
+                            break;
+                        }
                     }
+                    sb.append("\t@Override\n\tpublic List<").append(transformTableInfo.getTableName()).append("> queryAll")
+                            .append(transformTableInfo.getTableName()).append("(");
+                    for (int x = 1; x < filedEntities.size(); x++) {
+                        if (filedEntities.get(x).getType().equals("String")) {
+                            sb.append("String ").append(filedEntities.get(x).getName()).append(",");
+                        }
+                    }
+                    sb.append("Integer page,Integer pageSize){\n\t\tpage = (page - 1) * pageSize;\n\t\treturn ")
+                            .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                            .append("Mapper.queryAll")
+                            .append(transformTableInfo.getTableName()).append("(");
+                    for (int x = 1; x < filedEntities.size(); x++) {
+                        if (filedEntities.get(x).getType().equals("String")) {
+                            sb.append(filedEntities.get(x).getName()).append(",");
+                        }
+                    }
+                    sb.append("page,pageSize);\n\t}\n\n")
+                            .append("\t@Override\n\tpublic Integer queryAll").append(transformTableInfo.getTableName()).append("Count(");
+                    for (int x = 1; x < filedEntities.size(); x++) {
+                        if (filedEntities.get(x).getType().equals("String")) {
+                            sb.append("String ").append(filedEntities.get(x).getName()).append(",");
+                        }
+                    }
+                    if (conditionFlag) {
+                        sb.deleteCharAt(sb.lastIndexOf(","));
+                    }
+                    sb.append("){\n\t\treturn ")
+                            .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                            .append("Mapper.queryAll")
+                            .append(transformTableInfo.getTableName());
+                    sb.append("Count(");
+                    for (int x = 1; x < filedEntities.size(); x++) {
+                        if (filedEntities.get(x).getType().equals("String")) {
+                            sb.append(filedEntities.get(x).getName()).append(",");
+                        }
+                    }
+                    if (conditionFlag) {
+                        sb.deleteCharAt(sb.lastIndexOf(","));
+                    }
+                    sb.append(");\n\t}\n\n");
 
                     sb.append("\t@Override\n\tpublic ")
                             .append(transformTableInfo.getTableName())

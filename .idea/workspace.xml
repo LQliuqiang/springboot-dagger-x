@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3933e037-1e78-4a08-8be3-eb27aebf4b99" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/CreatePomXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/CreatePomXmlTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateControllerTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateControllerTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperXmlTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateServiceTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateServiceTask.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/tortoise/CreateTortoiseTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/tortoise/CreateTortoiseTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/validate/CheckDependency.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/validate/CheckDependency.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,10 +39,10 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.lq.task.tortoise" />
-      <recent name="com.lq.task.validate" />
       <recent name="com.lq" />
       <recent name="com.lq.task" />
+      <recent name="com.lq.task.validate" />
+      <recent name="com.lq.task.tortoise" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\LQ-project\springboot-dagger-x\src\main\java\com\lq\task\mybatis" />
@@ -64,7 +69,12 @@
       <workItem from="1594100882185" duration="795000" />
       <workItem from="1594174987014" duration="2252000" />
       <workItem from="1594196863531" duration="5000" />
-      <workItem from="1594369193053" duration="511000" />
+      <workItem from="1594369193053" duration="2901000" />
+      <workItem from="1594600700346" duration="4055000" />
+      <workItem from="1594862839636" duration="777000" />
+      <workItem from="1594865368317" duration="274000" />
+      <workItem from="1596442330984" duration="14000" />
+      <workItem from="1596530828171" duration="539000" />
     </task>
     <servers />
   </component>
@@ -77,6 +87,26 @@
     </ignored-roots>
   </component>
   <component name="WindowStateProjectService">
+    <state x="619" y="265" key="FileChooserDialogImpl" timestamp="1594865551839">
+      <screen x="0" y="0" width="1680" height="1010" />
+    </state>
+    <state x="619" y="265" key="FileChooserDialogImpl/0.0.1680.1010@0.0.1680.1010" timestamp="1594865551839" />
+    <state width="1636" height="209" key="GridCell.Tab.0.bottom" timestamp="1594372762098">
+      <screen x="0" y="0" width="1680" height="1010" />
+    </state>
+    <state width="1636" height="209" key="GridCell.Tab.0.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1594372762098" />
+    <state width="1636" height="209" key="GridCell.Tab.0.center" timestamp="1594372762098">
+      <screen x="0" y="0" width="1680" height="1010" />
+    </state>
+    <state width="1636" height="209" key="GridCell.Tab.0.center/0.0.1680.1010@0.0.1680.1010" timestamp="1594372762098" />
+    <state width="1636" height="209" key="GridCell.Tab.0.left" timestamp="1594372762098">
+      <screen x="0" y="0" width="1680" height="1010" />
+    </state>
+    <state width="1636" height="209" key="GridCell.Tab.0.left/0.0.1680.1010@0.0.1680.1010" timestamp="1594372762098" />
+    <state width="1636" height="209" key="GridCell.Tab.0.right" timestamp="1594372762098">
+      <screen x="0" y="0" width="1680" height="1010" />
+    </state>
+    <state width="1636" height="209" key="GridCell.Tab.0.right/0.0.1680.1010@0.0.1680.1010" timestamp="1594372762098" />
     <state x="341" y="136" key="SettingsEditor" timestamp="1591316753273">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
@@ -85,9 +115,9 @@
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="447" y="201" width="786" height="608" key="find.popup/0.0.1680.1010@0.0.1680.1010" timestamp="1591668502740" />
-    <state x="210" y="205" key="new project wizard" timestamp="1591321263800">
+    <state x="210" y="205" key="new project wizard" timestamp="1594865594983">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="210" y="205" key="new project wizard/0.0.1680.1010@0.0.1680.1010" timestamp="1591321263800" />
+    <state x="210" y="205" key="new project wizard/0.0.1680.1010@0.0.1680.1010" timestamp="1594865594983" />
   </component>
 </project>
