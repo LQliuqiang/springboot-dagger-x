@@ -1,5 +1,7 @@
 package com.lq.task.mybatis;
 
+
+
 import com.lq.SpringBootCli;
 import com.lq.entity.TableFiledEntity;
 import com.lq.entity.TableInfo;
@@ -45,7 +47,7 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
                 .append(transformTableInfo.getTableName())
                 .append("Service;\nimport org.springframework.validation.BindingResult;\nimport javax.validation.Valid;\nimport javax.annotation.Resource;\nimport org.springframework.web.bind.annotation.*;\n\n@RestController\n@RequestMapping(\"/")
                 .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
-                .append("\")\npublic class ")
+                .append("s\")\npublic class ")
                 .append(transformTableInfo.getTableName()).append("Controller {\n\n\t@Resource\n\tprivate ")
                 .append(transformTableInfo.getTableName())
                 .append("Service ").append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
@@ -55,9 +57,8 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
                 .filter(tableFiledEntity -> tableFiledEntity.getKey().equals("PRI"))
                 .findFirst()
                 .ifPresent(priKey -> {
-                    sb.append("\n\t@PostMapping(value = \"insert")
-                            .append(transformTableInfo.getTableName())
-                            .append("\", consumes = \"application/json\", produces = \"application/json\")\n\tpublic CommentResponse insert")
+                    sb.append("\n\t@PostMapping(")
+                            .append("consumes = \"application/json\", produces = \"application/json\")\n\tpublic CommentResponse insert")
                             .append(transformTableInfo.getTableName())
                             .append("(@RequestBody @Valid ")
                             .append(transformTableInfo.getTableName())
@@ -77,13 +78,11 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
                             break;
                         }
                     }
-                    sb.append("\t@GetMapping(\"/queryAll")
-                            .append(transformTableInfo.getTableName())
-                            .append("\")\n\tpublic CommentPageResponse")
-                            .append(" queryAll")
+                    sb.append("\t@GetMapping\n\tpublic CommentPageResponse queryAll")
                             .append(transformTableInfo.getTableName()).append("(");
                     for (int x = 1; x < filedEntities.size(); x++) {
-                        if (filedEntities.get(x).getType().equals("String")) {
+                        TableFiledEntity tableFiledEntity = filedEntities.get(x);
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
                             sb.append("@RequestParam(value = \"")
                                     .append(filedEntities.get(x).getName())
                                     .append("\", required = false) String ").append(filedEntities.get(x).getName()).append(",\n\t\t\t\t\t\t\t\t\t\t\t\t");
@@ -95,16 +94,19 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
                             .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("Service.queryAll")
                             .append(transformTableInfo.getTableName()).append("(");
                     for (int x = 1; x < filedEntities.size(); x++) {
-                        if (filedEntities.get(x).getType().equals("String")) {
-                            sb.append(filedEntities.get(x).getName()).append(",");
+                        TableFiledEntity tableFiledEntity = filedEntities.get(x);
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                            sb.append(tableFiledEntity.getName()).append(",");
                         }
                     }
                     sb.append("page,pageSize);\n\t\tint totalCount = ")
                             .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("Service.queryAll")
                             .append(transformTableInfo.getTableName()).append("Count(");
                     for (int x = 1; x < filedEntities.size(); x++) {
-                        if (filedEntities.get(x).getType().equals("String")) {
-                            sb.append(filedEntities.get(x).getName()).append(",");
+                        TableFiledEntity tableFiledEntity = filedEntities.get(x);
+                        Integer fieldLimitSize = tableFiledEntity.getFieldLimitSize();
+                        if (tableFiledEntity.getType().equals("String")&&fieldLimitSize<springBootCli.getQueryFieldLimitLength()) {
+                            sb.append(tableFiledEntity.getName()).append(",");
                         }
                     }
                     if (conditionFlag) {
@@ -112,17 +114,15 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
                     }
                     sb.append(");\n\t\tint totalPage = totalCount / pageSize + ((totalCount % pageSize > 0) ? 1 : 0);\n\t\treturn CommentPageResponse.success(")
                             .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append("s, totalPage, totalCount, page, pageSize);\n\t}\n\n");
-                    sb
-                            .append("\t@GetMapping(\"/query")
-                            .append(transformTableInfo.getTableName())
-                            .append("By")
-                            .append(StringUtil.firstToUpperCase(priKey.getName()))
+                    sb.append("\t@GetMapping(\"/{")
+                            .append(priKey.getName())
+                            .append("}")
                             .append("\")\n\tpublic CommentResponse")
                             .append(" query")
                             .append(transformTableInfo.getTableName())
                             .append("By")
-                            .append(StringUtil.firstToUpperCase(priKey.getName()))
-                            .append("(")
+                            .append(StringUtil.firstToUpperCase(priKey.getName())).append("(@PathVariable(\"")
+                            .append(priKey.getName()).append("\")")
                             .append(priKey.getType())
                             .append(" ")
                             .append(priKey.getName())
@@ -134,15 +134,15 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
                             .append(StringUtil.firstToUpperCase(priKey.getName()))
                             .append("(")
                             .append(priKey.getName())
-                            .append("));\n\t}\n\n\t@DeleteMapping(\"/delete")
-                            .append(transformTableInfo.getTableName())
-                            .append("By")
-                            .append(StringUtil.firstToUpperCase(priKey.getName()))
+                            .append("));\n\t}\n\n\t@DeleteMapping(\"/{")
+                            .append(priKey.getName())
+                            .append("}")
                             .append("\")\n\tpublic CommentResponse delete")
                             .append(transformTableInfo.getTableName())
                             .append("By")
                             .append(StringUtil.firstToUpperCase(priKey.getName()))
-                            .append("(")
+                            .append("(@PathVariable(\"")
+                            .append(priKey.getName()).append("\")")
                             .append(priKey.getType())
                             .append(" ")
                             .append(priKey.getName())
@@ -154,15 +154,37 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
                             .append(StringUtil.firstToUpperCase(priKey.getName()))
                             .append("(")
                             .append(priKey.getName())
-                            .append(")>0 ? CommentResponse.success() : CommentResponse.fail();\n\t}\n\n\n\t@PutMapping(value = \"update")
+                            .append(")>0 ? CommentResponse.success() : CommentResponse.fail();\n\t}\n\n\n\t@DeleteMapping\n\tpublic CommentResponse delete")
                             .append(transformTableInfo.getTableName())
-                            .append("\", consumes = \"application/json\", produces = \"application/json\")\n\tpublic CommentResponse update")
+                            .append("By")
+                            .append(StringUtil.firstToUpperCase(priKey.getName()))
+                            .append("s(@RequestParam(\"")
+                            .append(priKey.getName())
+                            .append("s\") List<")
+                            .append(priKey.getType())
+                            .append("> ")
+                            .append(priKey.getName())
+                            .append("s){\n\t\treturn ")
+                            .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                            .append("Service.delete")
+                            .append(transformTableInfo.getTableName())
+                            .append("By")
+                            .append(StringUtil.firstToUpperCase(priKey.getName()))
+                            .append("s(")
+                            .append(priKey.getName())
+                            .append("s)>0 ? CommentResponse.success() : CommentResponse.fail();\n\t}\n\n\n\t@PutMapping(consumes = \"application/json\", produces = \"application/json\")\n\tpublic CommentResponse update")
                             .append(transformTableInfo.getTableName())
                             .append("(@RequestBody ")
                             .append(transformTableInfo.getTableName())
                             .append(" ")
                             .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
-                            .append("){\n\t\treturn ")
+                            .append("){\n\t\tif(")
+                            .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                            .append(".get")
+                            .append(StringUtil.firstToUpperCase(priKey.getName()))
+                            .append("()==null){\n\t\t\treturn CommentResponse.fail(\"")
+                            .append(priKey.getName()).append(" 字段不能为空\");\n\t\t}")
+                            .append("\n\t\treturn ")
                             .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
                             .append("Service.update")
                             .append(transformTableInfo.getTableName()).append("(")

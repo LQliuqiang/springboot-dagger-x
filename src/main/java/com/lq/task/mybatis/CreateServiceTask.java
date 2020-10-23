@@ -62,15 +62,17 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                             sb.append("List<").append(transformTableInfo.getTableName()).append("> queryAll")
                                     .append(transformTableInfo.getTableName()).append("(");
                             for (int x = 1; x < filedEntities.size(); x++) {
-                                if (filedEntities.get(x).getType().equals("String")) {
-                                    sb.append("String ").append(filedEntities.get(x).getName()).append(",");
+                                TableFiledEntity tableFiledEntity = filedEntities.get(x);
+                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                                    sb.append("String ").append(tableFiledEntity.getName()).append(",");
                                 }
                             }
                             sb.append("Integer page,Integer pageSize);\n\n\t")
                                     .append("Integer queryAll").append(transformTableInfo.getTableName()).append("Count(");
                             for (int x = 1; x < filedEntities.size(); x++) {
-                                if (filedEntities.get(x).getType().equals("String")) {
-                                    sb.append("String ").append(filedEntities.get(x).getName()).append(",");
+                                TableFiledEntity tableFiledEntity = filedEntities.get(x);
+                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                                    sb.append("String ").append(tableFiledEntity.getName()).append(",");
                                 }
                             }
                             for (int x = 1; x < filedEntities.size(); x++) {
@@ -99,6 +101,17 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                                     .append(" ")
                                     .append(priKey.getName())
                                     .append(");\n\n")
+
+                                    .append("\tint delete")
+                                    .append(transformTableInfo.getTableName())
+                                    .append("By")
+                                    .append(StringUtil.firstToUpperCase(priKey.getName()))
+                                    .append("s(List<")
+                                    .append(priKey.getType())
+                                    .append("> ")
+                                    .append(priKey.getName())
+                                    .append("s);\n\n")
+
                                     .append("\tboolean update")
                                     .append(transformTableInfo.getTableName())
                                     .append("(")
@@ -185,8 +198,9 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                     sb.append("\t@Override\n\tpublic List<").append(transformTableInfo.getTableName()).append("> queryAll")
                             .append(transformTableInfo.getTableName()).append("(");
                     for (int x = 1; x < filedEntities.size(); x++) {
-                        if (filedEntities.get(x).getType().equals("String")) {
-                            sb.append("String ").append(filedEntities.get(x).getName()).append(",");
+                        TableFiledEntity tableFiledEntity = filedEntities.get(x);
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                            sb.append("String ").append(tableFiledEntity.getName()).append(",");
                         }
                     }
                     sb.append("Integer page,Integer pageSize){\n\t\tpage = (page - 1) * pageSize;\n\t\treturn ")
@@ -194,15 +208,17 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                             .append("Mapper.queryAll")
                             .append(transformTableInfo.getTableName()).append("(");
                     for (int x = 1; x < filedEntities.size(); x++) {
-                        if (filedEntities.get(x).getType().equals("String")) {
-                            sb.append(filedEntities.get(x).getName()).append(",");
+                        TableFiledEntity tableFiledEntity = filedEntities.get(x);
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                            sb.append(tableFiledEntity.getName()).append(",");
                         }
                     }
                     sb.append("page,pageSize);\n\t}\n\n")
                             .append("\t@Override\n\tpublic Integer queryAll").append(transformTableInfo.getTableName()).append("Count(");
                     for (int x = 1; x < filedEntities.size(); x++) {
-                        if (filedEntities.get(x).getType().equals("String")) {
-                            sb.append("String ").append(filedEntities.get(x).getName()).append(",");
+                        TableFiledEntity tableFiledEntity = filedEntities.get(x);
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                            sb.append("String ").append(tableFiledEntity.getName()).append(",");
                         }
                     }
                     if (conditionFlag) {
@@ -214,15 +230,15 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                             .append(transformTableInfo.getTableName());
                     sb.append("Count(");
                     for (int x = 1; x < filedEntities.size(); x++) {
-                        if (filedEntities.get(x).getType().equals("String")) {
-                            sb.append(filedEntities.get(x).getName()).append(",");
+                        TableFiledEntity tableFiledEntity = filedEntities.get(x);
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                            sb.append(tableFiledEntity.getName()).append(",");
                         }
                     }
                     if (conditionFlag) {
                         sb.deleteCharAt(sb.lastIndexOf(","));
                     }
                     sb.append(");\n\t}\n\n");
-
                     sb.append("\t@Override\n\tpublic ")
                             .append(transformTableInfo.getTableName())
                             .append(" query")
@@ -303,6 +319,40 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                                 .append(priKey.getName())
                                 .append(");\n\t}\n\n");
                     }
+
+                    sb.append("\t@Override\n\tpublic int delete")
+                            .append(transformTableInfo.getTableName())
+                            .append("By")
+                            .append(StringUtil.firstToUpperCase(priKey.getName()))
+                            .append("s(List<")
+                            .append(priKey.getType())
+                            .append("> ")
+                            .append(priKey.getName())
+                            .append("s){\n\t\t");
+                    if (springBootCli.isUseRedis()) {
+                        sb.append("int deleteFlag = ").append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                .append("Mapper.delete")
+                                .append(transformTableInfo.getTableName())
+                                .append("By")
+                                .append(StringUtil.firstToUpperCase(priKey.getName()))
+                                .append("s(")
+                                .append(priKey.getName())
+                                .append("s);\n\t\tif (deleteFlag > 1) {\n\t\t\t")
+                                .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                .append("RedisTemplate.delete(")
+                                .append(priKey.getName())
+                                .append("s);\n\t\t}\n\t\treturn deleteFlag;\n\t}\n\n");
+                    } else {
+                        sb.append("return ").append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
+                                .append("Mapper.delete")
+                                .append(transformTableInfo.getTableName())
+                                .append("By")
+                                .append(StringUtil.firstToUpperCase(priKey.getName()))
+                                .append("s(")
+                                .append(priKey.getName())
+                                .append("s);\n\t}\n\n");
+                    }
+
                     sb.append("\t@Override\n\tpublic boolean update")
                             .append(transformTableInfo.getTableName())
                             .append("(")

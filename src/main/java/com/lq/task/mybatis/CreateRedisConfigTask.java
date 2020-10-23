@@ -80,7 +80,11 @@ public final class CreateRedisConfigTask extends BaseTask<Boolean> {
                 .append("RedisTemplate(\n\t\t\tRedisConnectionFactory redisConnectionFactory) {\n\t\tRedisTemplate<")
                 .append(redisKeyType).append(", ")
                 .append(transformTableInfo.getTableName())
-                .append("> template = new RedisTemplate<>();\n\t\ttemplate.setKeySerializer(new StringRedisSerializer());\n\t\ttemplate.setConnectionFactory(redisConnectionFactory);\n\t\tJackson2JsonRedisSerializer<")
+                .append("> template = new RedisTemplate<>();");
+        if (redisKeyType.equals("String")){
+            redisConfigContent.append("\n\t\ttemplate.setKeySerializer(new StringRedisSerializer());");
+        }
+        redisConfigContent.append("\n\t\ttemplate.setConnectionFactory(redisConnectionFactory);\n\t\tJackson2JsonRedisSerializer<")
                 .append(transformTableInfo.getTableName())
                 .append("> ser = new Jackson2JsonRedisSerializer<>(")
                 .append(transformTableInfo.getTableName()).append(".class);\n\t\ttemplate.setDefaultSerializer(ser);\n\t\treturn template;\n\t}\n\n");

@@ -67,6 +67,7 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
                 .append("ColumnSql\">\n\t\t")
                 .append(sqlField.deleteCharAt(sqlField.length() - 1))
                 .append("\n\t</sql>");
+//        //javabean中的属性
         List<TableFiledEntity> filedEntities2 = transformTableInfo.getFiledEntities();
         for (int i = 0; i < filedEntities2.size(); i++) {
             TableFiledEntity priKey = filedEntities2.get(i);
@@ -85,6 +86,7 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
                         .append("(<include refid=\"")
                         .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
                         .append("ColumnSql\"/>)\n\t\tvalues(");
+                //javabean中的属性
                 for (TableFiledEntity filedEntity : filedEntities2) {
                     String fieldName = StringUtil.firstIsUpperCase(filedEntity.getName()) ? StringUtil.firstToLowerCase(filedEntity.getName()) : filedEntity.getName();
                     sb.append("#{").append(fieldName).append("},");
@@ -142,15 +144,16 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
                 if (conditionFlag) {
                     sb.append("\n\n\t<sql id=\"queryCondition\">\n\t\t<where>");
                     for (int x = 1; x < filedEntities2.size(); x++) {
-                        if (filedEntities2.get(x).getType().equals("String")) {
+                        TableFiledEntity tableFiledEntity = filedEntities2.get(x);
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
                             sb.append("\n\t\t\t<if test=\"")
-                                    .append(filedEntities2.get(x).getName())
+                                    .append(tableFiledEntity.getName())
                                     .append("!=null and ")
-                                    .append(filedEntities2.get(x).getName())
+                                    .append(tableFiledEntity.getName())
                                     .append("!=''\">\n\t\t\t\tand ")
                                     .append(filedEntities.get(x).getName())
                                     .append(" like '%${")
-                                    .append(filedEntities2.get(x).getName())
+                                    .append(tableFiledEntity.getName())
                                     .append("}%'\n\t\t\t</if>");
                         }
                     }
@@ -166,12 +169,28 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
                         .append(filedEntities.get(i).getName())
                         .append("=#{")
                         .append(priKey.getName())
-                        .append("}\n\t</delete>\n\n\t<update id=\"update")
+                        .append("}\n\t</delete>\n\n\t<delete id=\"delete")
+                        .append(transformTableInfo.getTableName())
+                        .append("By")
+                        .append(StringUtil.firstToUpperCase(priKey.getName()))
+                        .append("s\" parameterType=\"java.util.List\">\n\t\tdelete from ")
+                        .append(tableInfo.getTableName())
+                        .append(" where ")
+                        .append(filedEntities.get(i).getName())
+                        .append(" in\n\t\t<foreach collection=\"")
+                        .append(priKey.getName())
+                        .append("s\" item=\"")
+                        .append(priKey.getName())
+                        .append("\" open=\"(\" close=\")\" separator=\",\">\n\t\t\t#{")
+                        .append(priKey.getName())
+                        .append("}\n\t\t</foreach>\n\t</delete>\n\n\t<update id=\"update")
                         .append(transformTableInfo.getTableName())
                         .append("\">\n\t\tupdate ")
                         .append(tableInfo.getTableName()).append("\n\t\t<trim prefix=\"set\" suffixOverrides=\",\"> \n\t\t\t");
                 for (int x = 0; x < filedEntities2.size(); x++) {
+                    //数据库原型字段
                     TableFiledEntity filedEntity = filedEntities.get(x);
+                    //javaBean字段
                     TableFiledEntity filedEntity1 = filedEntities2.get(x);
                     if (!filedEntity.getName().equals(priKey.getName())) {
                         if (filedEntity1.getType().equals("String")) {

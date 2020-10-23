@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3933e037-1e78-4a08-8be3-eb27aebf4b99" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/CreatePomXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/CreatePomXmlTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateControllerTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateControllerTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperXmlTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateServiceTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateServiceTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/tortoise/CreateTortoiseTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/tortoise/CreateTortoiseTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/validate/CheckDependency.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/task/validate/CheckDependency.java" afterDir="false" />
-    </list>
+    <list default="true" id="3933e037-1e78-4a08-8be3-eb27aebf4b99" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -74,7 +65,9 @@
       <workItem from="1594862839636" duration="777000" />
       <workItem from="1594865368317" duration="274000" />
       <workItem from="1596442330984" duration="14000" />
-      <workItem from="1596530828171" duration="539000" />
+      <workItem from="1596530828171" duration="1555000" />
+      <workItem from="1596672536399" duration="2823000" />
+      <workItem from="1603181292986" duration="1200000" />
     </task>
     <servers />
   </component>

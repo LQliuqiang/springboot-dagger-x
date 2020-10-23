@@ -1,6 +1,8 @@
 package com.lq.task.mybatis;
 
 
+
+
 import com.lq.SpringBootCli;
 import com.lq.entity.TableFiledEntity;
 import com.lq.entity.TableInfo;
@@ -54,21 +56,23 @@ public final class CreateMapperTask extends BaseTask<Boolean> {
                                     .append(transformTableInfo.getTableName());
                             sb.append("(");
                             for (int x = 1; x < filedEntities.size(); x++) {
-                                if (filedEntities.get(x).getType().equals("String")) {
+                                TableFiledEntity tableFiledEntity = filedEntities.get(x);
+                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
                                     sb.append("@Param(\"")
-                                            .append(filedEntities.get(x).getName())
+                                            .append(tableFiledEntity.getName())
                                             .append("\")String ")
-                                            .append(filedEntities.get(x).getName()).append(",\n\t\t\t\t\t\t\t");
+                                            .append(tableFiledEntity.getName()).append(",\n\t\t\t\t\t\t\t");
                                 }
                             }
                             sb.append("@Param(\"page\")Integer page, @Param(\"pageSize\")Integer pageSize);\n\n\t")
                                     .append("Integer queryAll").append(transformTableInfo.getTableName()).append("Count(");
                             for (int x = 1; x < filedEntities.size(); x++) {
-                                if (filedEntities.get(x).getType().equals("String")) {
+                                TableFiledEntity tableFiledEntity = filedEntities.get(x);
+                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
                                     sb.append("@Param(\"")
-                                            .append(filedEntities.get(x).getName())
+                                            .append(tableFiledEntity.getName())
                                             .append("\")String ")
-                                            .append(filedEntities.get(x).getName()).append(",\n\t\t\t\t\t\t\t");
+                                            .append(tableFiledEntity.getName()).append(",\n\t\t\t\t\t\t\t");
                                 }
                             }
                             for (int x = 1; x < filedEntities.size(); x++) {
@@ -100,8 +104,17 @@ public final class CreateMapperTask extends BaseTask<Boolean> {
                                     .append(priKey.getType())
                                     .append(" ")
                                     .append(priKey.getName())
-                                    .append(");\n\n")
-                                    .append("\tboolean update")
+                                    .append(");\n\n\tint delete")
+                                    .append(transformTableInfo.getTableName())
+                                    .append("By")
+                                    .append(StringUtil.firstToUpperCase(priKey.getName()))
+                                    .append("s(@Param(\"")
+                                    .append(priKey.getName())
+                                    .append("s\") List<")
+                                    .append(priKey.getType())
+                                    .append("> ")
+                                    .append(priKey.getName())
+                                    .append("s);\n\n\tboolean update")
                                     .append(transformTableInfo.getTableName())
                                     .append("(")
                                     .append(transformTableInfo.getTableName())

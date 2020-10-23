@@ -10,7 +10,6 @@ import com.lq.task.CreateApplicationXmlTask;
 import com.lq.task.CreatePomXmlTask;
 import com.lq.task.CreateTemplateTask;
 import com.lq.task.mybatis.*;
-import com.lq.task.tortoise.CreateTortoiseTask;
 import com.lq.task.validate.CheckDependency;
 
 import java.io.File;
@@ -29,10 +28,15 @@ public class SpringBootCli {
     private String fastJsonVersion;
     private String filterTableNameStr;
     private boolean generateController;
+    private int queryFieldLimitLength = 70;
     private boolean useRedis;
+    //强制覆盖所有的
     private boolean forceCover;
+    //项目名称路径，如：D:\beacon-project\springboot-dagger-project\springboot-dagger
     private String projectPath;
+    //包路径，如：com.lq
     private String packageName;
+    //项目包路径，如：D:\beacon-project\springboot-dagger-project\springboot-dagger\src\main\java\com\lq\
     private String rootPackagePath;
 
     public SpringBootCli(Builder builder) {
@@ -44,6 +48,7 @@ public class SpringBootCli {
         this.fastJsonVersion = builder.fastJsonVersion;
         this.filterTableNameStr = builder.filterTableNameStr;
         this.generateController = builder.generateController;
+        this.queryFieldLimitLength = builder.queryFieldLimitLength;
         this.useRedis = builder.useRedis;
         this.forceCover = builder.forceCover;
         String path = new File(builder.aClass.getResource("").getPath()).getPath();
@@ -55,26 +60,16 @@ public class SpringBootCli {
     }
 
     public void initSpringBoot(String... filterTableNames) throws Exception {
+        //创建pom文件
         new CreatePomXmlTask(this).execute();
+        //创建application.yml文件
         new CreateApplicationXmlTask(this).execute();
+        //创建基本web辅助的文件
         new CreateTemplateTask(this).execute();
+        //创建mybatis
         List<String> tableNameList = Arrays.asList(filterTableNames);
         List<TableInfo> tableInfos = new CreateJavaBeanTask(this).execute(tableInfo -> !tableNameList.contains(tableInfo.getTableName()));
         createMybatis(null, tableInfos);
-    }
-
-    public void useTortoise(boolean isTenant) throws Exception {
-        new CheckDependency(this).execute(CheckDependency.TORTOISE_FLAG);
-        new CreateTortoiseTask(this,isTenant).execute();
-        System.out.println("\n\n---------------------------------");
-        System.err.println("tortoise config application.yml");
-        String sb = "auth-args:\n" +
-                "  secret-token-key: auth2090\n" +
-                "  split-symbol: Symbol\n" +
-                "  decrypt-mode: python\n" +
-                "  exclude-url-paths: /urlPath";
-        System.out.println(sb);
-        System.out.println("\n\n---------------------------------");
     }
 
     public void createMybatis(String... tableNames) throws Exception {
@@ -171,6 +166,10 @@ public class SpringBootCli {
         this.generateController = generateController;
     }
 
+    public int getQueryFieldLimitLength() {
+        return queryFieldLimitLength;
+    }
+
     public void setUseRedis(boolean useRedis) {
         this.useRedis = useRedis;
     }
@@ -189,6 +188,7 @@ public class SpringBootCli {
         private String druidVersion = "1.1.22";
         private String fastJsonVersion = "1.2.47";
         private String filterTableNameStr;
+        private int queryFieldLimitLength = 70;
         private boolean generateController;
         private boolean useRedis;
         private boolean forceCover;
@@ -226,6 +226,11 @@ public class SpringBootCli {
 
         public Builder generateController(boolean generateController) {
             this.generateController = generateController;
+            return this;
+        }
+
+        public Builder setQueryFieldLimitLength(int queryFieldLimitLength) {
+            this.queryFieldLimitLength = queryFieldLimitLength;
             return this;
         }
 
