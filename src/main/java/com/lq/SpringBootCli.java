@@ -1,54 +1,35 @@
 package com.lq;
 
 import com.lq.entity.JdbcConfigEntity;
-import com.lq.entity.TableInfo;
-import com.lq.interceptor.MapperJavaInterceptor;
-import com.lq.interceptor.MapperXmlInterceptor;
-import com.lq.interceptor.MybatisInterceptor;
-import com.lq.interceptor.ServiceJavaInterceptor;
-import com.lq.task.CreateApplicationXmlTask;
-import com.lq.task.CreatePomXmlTask;
-import com.lq.task.CreateTemplateTask;
-import com.lq.task.mybatis.*;
-import com.lq.task.validate.CheckDependency;
+import com.lq.jpa.Jpa;
+import com.lq.mybaits.Mybatis;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+
 
 public class SpringBootCli {
 
+    public interface FrameModel{
+        String MYBATIS = "mybatis";
+        String JPA = "jpa";
+    }
+
+
     private JdbcConfigEntity jdbcConfigEntity;
-    private String springBootVersion;
-    private String mybatisVersion;
-    private String mysqlConnectorVersion;
-    private String druidVersion;
-    private String fastJsonVersion;
-    private String filterTableNameStr;
-    private boolean generateController;
-    private int queryFieldLimitLength = 70;
+    private int queryCriteriaLimit;
     private boolean useRedis;
     //强制覆盖所有的
     private boolean forceCover;
     //项目名称路径，如：D:\beacon-project\springboot-dagger-project\springboot-dagger
     private String projectPath;
-    //包路径，如：com.lq
+    //包路径，如：com.fii
     private String packageName;
-    //项目包路径，如：D:\beacon-project\springboot-dagger-project\springboot-dagger\src\main\java\com\lq\
+    //项目包路径，如：D:\beacon-project\springboot-dagger-project\springboot-dagger\src\main\java\com\fii\
     private String rootPackagePath;
 
     public SpringBootCli(Builder builder) {
         this.jdbcConfigEntity = builder.jdbcConfigEntity;
-        this.springBootVersion = builder.springBootVersion;
-        this.mybatisVersion = builder.mybatisVersion;
-        this.mysqlConnectorVersion = builder.mysqlConnectorVersion;
-        this.druidVersion = builder.druidVersion;
-        this.fastJsonVersion = builder.fastJsonVersion;
-        this.filterTableNameStr = builder.filterTableNameStr;
-        this.generateController = builder.generateController;
-        this.queryFieldLimitLength = builder.queryFieldLimitLength;
+        this.queryCriteriaLimit = builder.queryCriteriaLimit;
         this.useRedis = builder.useRedis;
         this.forceCover = builder.forceCover;
         String path = new File(builder.aClass.getResource("").getPath()).getPath();
@@ -59,87 +40,20 @@ public class SpringBootCli {
         this.rootPackagePath = filePath.replace(builder.aClass.getSimpleName() + ".java", "");
     }
 
-    public void initSpringBoot(String... filterTableNames) throws Exception {
-        //创建pom文件
-        new CreatePomXmlTask(this).execute();
-        //创建application.yml文件
-        new CreateApplicationXmlTask(this).execute();
-        //创建基本web辅助的文件
-        new CreateTemplateTask(this).execute();
-        //创建mybatis
-        List<String> tableNameList = Arrays.asList(filterTableNames);
-        List<TableInfo> tableInfos = new CreateJavaBeanTask(this).execute(tableInfo -> !tableNameList.contains(tableInfo.getTableName()));
-        createMybatis(null, tableInfos);
+    public Mybatis Mybatis() {
+        return new Mybatis(this);
     }
 
-    public void createMybatis(String... tableNames) throws Exception {
-        createMybatis(null, tableNames);
-    }
-
-    public void createMybatis(List<MybatisInterceptor> mybatisInterceptors,String... tableNames) throws Exception {
-        List<String> tableNameList = Arrays.asList(tableNames);
-        List<TableInfo> tableInfos = new CreateJavaBeanTask(this).execute(tableInfo -> tableNameList.contains(tableInfo.getTableName()));
-        createMybatis(mybatisInterceptors, tableInfos);
-    }
-
-    private void createMybatis(List<MybatisInterceptor> mybatisInterceptors, List<TableInfo> tableInfos) throws Exception {
-        Optional.ofNullable(mybatisInterceptors)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(mybatisInterceptor -> mybatisInterceptor instanceof MapperJavaInterceptor)
-                .findFirst().ifPresent(mapperJavaInterceptor -> mapperJavaInterceptor.handle(this, tableInfos));
-        new CreateMapperTask(this, tableInfos).execute();
-        Optional.ofNullable(mybatisInterceptors)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(mybatisInterceptor -> mybatisInterceptor instanceof MapperXmlInterceptor)
-                .findFirst().ifPresent(mapperXmlInterceptor -> mapperXmlInterceptor.handle(this, tableInfos));
-        new CreateMapperXmlTask(this, tableInfos).execute();
-        Optional.ofNullable(mybatisInterceptors)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(mybatisInterceptor -> mybatisInterceptor instanceof ServiceJavaInterceptor)
-                .findFirst().ifPresent(serviceJavaInterceptor -> serviceJavaInterceptor.handle(this, tableInfos));
-        new CreateServiceTask(this, tableInfos).execute();
-        if (this.useRedis) {
-            new CheckDependency(this).execute(CheckDependency.REDIS_FLAG);
-            new CreateRedisConfigTask(this, tableInfos).execute();
-        }
-        if (this.generateController) {
-            new CreateControllerTask(this, tableInfos).execute();
-        }
+    public Jpa Jpa() {
+        return new Jpa(this);
     }
 
     public JdbcConfigEntity getJdbcConfigEntity() {
         return jdbcConfigEntity;
     }
 
-    public String getSpringBootVersion() {
-        return springBootVersion;
-    }
-
-    public String getMybatisVersion() {
-        return mybatisVersion;
-    }
-
-    public String getMysqlConnectorVersion() {
-        return mysqlConnectorVersion;
-    }
-
-    public String getDruidVersion() {
-        return druidVersion;
-    }
-
-    public String getFastJsonVersion() {
-        return fastJsonVersion;
-    }
-
-    public String getFilterTableNameStr() {
-        return filterTableNameStr;
-    }
-
-    public boolean isGenerateController() {
-        return generateController;
+    public int getQueryFieldLimitLength() {
+        return queryCriteriaLimit;
     }
 
     public boolean isUseRedis() {
@@ -162,14 +76,6 @@ public class SpringBootCli {
         return forceCover;
     }
 
-    public void setGenerateController(boolean generateController) {
-        this.generateController = generateController;
-    }
-
-    public int getQueryFieldLimitLength() {
-        return queryFieldLimitLength;
-    }
-
     public void setUseRedis(boolean useRedis) {
         this.useRedis = useRedis;
     }
@@ -182,55 +88,17 @@ public class SpringBootCli {
 
         private Class<?> aClass;
         private JdbcConfigEntity jdbcConfigEntity;
-        private String springBootVersion = "2.2.4.RELEASE";
-        private String mybatisVersion = "2.1.2";
-        private String mysqlConnectorVersion = "5.1.49";
-        private String druidVersion = "1.1.22";
-        private String fastJsonVersion = "1.2.47";
-        private String filterTableNameStr;
-        private int queryFieldLimitLength = 70;
-        private boolean generateController;
-        private boolean useRedis;
         private boolean forceCover;
-
+        private boolean useRedis;
+        private int queryCriteriaLimit = 70;
 
         public Builder(Class<?> aClass, JdbcConfigEntity jdbcConfigEntity) {
             this.jdbcConfigEntity = jdbcConfigEntity;
             this.aClass = aClass;
         }
 
-        public Builder springBootVersion(String springBootVersion) {
-            this.springBootVersion = springBootVersion;
-            return this;
-        }
-
-        public Builder mybatisVersion(String mybatisVersion) {
-            this.mybatisVersion = mybatisVersion;
-            return this;
-        }
-
-        public Builder mysqlConnectorVersion(String mysqlConnectorVersion) {
-            this.mysqlConnectorVersion = mysqlConnectorVersion;
-            return this;
-        }
-
-        public Builder druidVersion(String druidVersion) {
-            this.druidVersion = druidVersion;
-            return this;
-        }
-
-        public Builder fastJsonVersion(String fastJsonVersion) {
-            this.fastJsonVersion = fastJsonVersion;
-            return this;
-        }
-
-        public Builder generateController(boolean generateController) {
-            this.generateController = generateController;
-            return this;
-        }
-
-        public Builder setQueryFieldLimitLength(int queryFieldLimitLength) {
-            this.queryFieldLimitLength = queryFieldLimitLength;
+        public Builder setQueryCriteriaLimit(int queryCriteriaLimit) {
+            this.queryCriteriaLimit = queryCriteriaLimit;
             return this;
         }
 
@@ -239,10 +107,6 @@ public class SpringBootCli {
             return this;
         }
 
-        public Builder setFilterTableNameStr(String filterTableNameStr) {
-            this.filterTableNameStr = filterTableNameStr;
-            return this;
-        }
 
         public Builder setForceCover(boolean forceCover) {
             this.forceCover = forceCover;

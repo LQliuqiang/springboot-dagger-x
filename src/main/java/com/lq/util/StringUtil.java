@@ -12,18 +12,34 @@ public class StringUtil {
         return sb.toString();
     }
 
+    /**
+     * 将字符串字一个字符转换为小写
+     * @param str
+     * @return
+     */
     public static String firstToLowerCase(String str) {
         char[] cs = str.toCharArray();
         cs[0] += 32;
         return String.valueOf(cs);
     }
 
+    /**
+     * 将字符串字一个字符转换为大写
+     * @param str
+     * @return
+     */
     public static String firstToUpperCase(String str) {
         char[] cs = str.toCharArray();
         cs[0] -= 32;
         return String.valueOf(cs);
     }
 
+
+    /**
+     * 判断字符串第一个字符是否为大写
+     * @param s
+     * @return
+     */
     public static boolean firstIsUpperCase(String s) {
         return Character.isUpperCase(s.charAt(0));
     }
@@ -31,6 +47,11 @@ public class StringUtil {
 
     private final static String UNDERLINE = "_";
 
+    /**
+     * 去除下划线
+     * @param para
+     * @return
+     */
     public static String underlineToHump(String para) {
         StringBuilder result = new StringBuilder();
         String a[] = para.split(UNDERLINE);

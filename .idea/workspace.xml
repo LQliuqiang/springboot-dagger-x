@@ -1,7 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3933e037-1e78-4a08-8be3-eb27aebf4b99" name="Default Changelist" comment="" />
+    <list default="true" id="3933e037-1e78-4a08-8be3-eb27aebf4b99" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lq/glob/Constants.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lq/jpa/Jpa.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lq/jpa/interceptor/JpaInterceptor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lq/jpa/interceptor/ServiceJavaInterceptor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lq/jpa/task/CreateControllerTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lq/jpa/task/CreateJavaBeanTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lq/jpa/task/CreateServiceTask.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/Mybatis.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/entity/JdbcConfigEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/entity/JdbcConfigEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/interceptor/MapperJavaInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/interceptor/MapperJavaInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/interceptor/MapperXmlInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/interceptor/MapperXmlInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/interceptor/MybatisInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/interceptor/MybatisInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/interceptor/ServiceJavaInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/interceptor/ServiceJavaInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/BaseTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/glob/task/BaseTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/CreateApplicationXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/glob/task/CreateApplicationXmlTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/CreatePomXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/glob/task/CreatePomXmlTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/CreateTemplateTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/glob/task/CreateTemplateTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateControllerTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/task/CreateControllerTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateJavaBeanTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/task/CreateJavaBeanTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/task/CreateMapperTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateMapperXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/task/CreateMapperXmlTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateRedisConfigTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/glob/task/CreateRedisConfigTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis/CreateServiceTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/task/CreateServiceTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/task/validate/CheckDependency.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/glob/CheckDependency.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/util/StringUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/util/StringUtil.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,22 +51,27 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/com/lq/task/mybatis" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/com/lq" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.javacompiler" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.lq.entity" />
       <recent name="com.lq" />
       <recent name="com.lq.task" />
+      <recent name="com.lq.task.mybatis" />
       <recent name="com.lq.task.validate" />
-      <recent name="com.lq.task.tortoise" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\LQ-project\springboot-dagger-x\src\main\java\com\lq\task\mybatis" />
-      <recent name="D:\LQ-project\springboot-dagger-x\src\main\java" />
       <recent name="D:\LQ-project\springboot-dagger-x\src\main\java\com\lq" />
+      <recent name="D:\LQ-project\springboot-dagger-x\src\main\java\com\lq\task\mybatis" />
+      <recent name="D:\LQ-project\springboot-dagger-x\src\main\java\com\lq\task" />
+      <recent name="D:\LQ-project\springboot-dagger-x\src\main\java" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -68,6 +101,10 @@
       <workItem from="1596530828171" duration="1555000" />
       <workItem from="1596672536399" duration="2823000" />
       <workItem from="1603181292986" duration="1200000" />
+      <workItem from="1603433724114" duration="4328000" />
+      <workItem from="1604276606961" duration="392000" />
+      <workItem from="1605149614931" duration="5000" />
+      <workItem from="1605165302795" duration="477000" />
     </task>
     <servers />
   </component>
@@ -84,30 +121,10 @@
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
     <state x="619" y="265" key="FileChooserDialogImpl/0.0.1680.1010@0.0.1680.1010" timestamp="1594865551839" />
-    <state width="1636" height="209" key="GridCell.Tab.0.bottom" timestamp="1594372762098">
+    <state x="320" y="78" key="SettingsEditor" timestamp="1603439508953">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state width="1636" height="209" key="GridCell.Tab.0.bottom/0.0.1680.1010@0.0.1680.1010" timestamp="1594372762098" />
-    <state width="1636" height="209" key="GridCell.Tab.0.center" timestamp="1594372762098">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state width="1636" height="209" key="GridCell.Tab.0.center/0.0.1680.1010@0.0.1680.1010" timestamp="1594372762098" />
-    <state width="1636" height="209" key="GridCell.Tab.0.left" timestamp="1594372762098">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state width="1636" height="209" key="GridCell.Tab.0.left/0.0.1680.1010@0.0.1680.1010" timestamp="1594372762098" />
-    <state width="1636" height="209" key="GridCell.Tab.0.right" timestamp="1594372762098">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state width="1636" height="209" key="GridCell.Tab.0.right/0.0.1680.1010@0.0.1680.1010" timestamp="1594372762098" />
-    <state x="341" y="136" key="SettingsEditor" timestamp="1591316753273">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state x="341" y="136" key="SettingsEditor/0.0.1680.1010@0.0.1680.1010" timestamp="1591316753273" />
-    <state x="447" y="201" width="786" height="608" key="find.popup" timestamp="1591668502740">
-      <screen x="0" y="0" width="1680" height="1010" />
-    </state>
-    <state x="447" y="201" width="786" height="608" key="find.popup/0.0.1680.1010@0.0.1680.1010" timestamp="1591668502740" />
+    <state x="320" y="78" key="SettingsEditor/0.0.1680.1010@0.0.1680.1010" timestamp="1603439508953" />
     <state x="210" y="205" key="new project wizard" timestamp="1594865594983">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>

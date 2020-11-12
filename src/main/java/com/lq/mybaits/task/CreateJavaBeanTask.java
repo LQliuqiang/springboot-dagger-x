@@ -1,9 +1,9 @@
-package com.lq.task.mybatis;
+package com.lq.mybaits.task;
 
 import com.lq.SpringBootCli;
 import com.lq.entity.TableFiledEntity;
 import com.lq.entity.TableInfo;
-import com.lq.task.BaseTask;
+import com.lq.glob.task.BaseTask;
 import com.lq.util.JdbcUtil;
 import com.lq.util.StringUtil;
 
@@ -57,9 +57,6 @@ public final class CreateJavaBeanTask extends BaseTask<List<TableInfo>> {
 
     private TableInfo transformTableInfo(TableInfo tableInfo) {
         String tableInfoTableName = tableInfo.getTableName();
-        if (springBootCli.getFilterTableNameStr() != null) {
-            tableInfoTableName = tableInfoTableName.replaceAll(springBootCli.getFilterTableNameStr(), "");
-        }
         String tableName = StringUtil.firstToUpperCase(StringUtil.underlineToHump(tableInfoTableName));
         List<TableFiledEntity> tableFiledEntities = new ArrayList<>();
         for (TableFiledEntity tableFiledEntity : tableInfo.getFiledEntities()) {
@@ -85,6 +82,7 @@ public final class CreateJavaBeanTask extends BaseTask<List<TableInfo>> {
                 .append(";\n\nimport org.hibernate.validator.constraints.Length;\nimport javax.validation.constraints.NotBlank;\n\n");
         sb.append("public class ").append(transformTableInfo.getTableName()).append(" {\n\n");
         transformTableInfo.getFiledEntities().forEach(tableFiledEntity -> {
+            //组装字段限制条件注解
             if (!tableFiledEntity.getKey().equals("PRI") && tableFiledEntity.getaNull().equals("NO") && tableFiledEntity.getType().equals("String")) {
                 sb.append("\t@NotBlank(message=\"").append(tableFiledEntity.getName()).append("不能为空\")\n");
                 if (tableFiledEntity.getFieldLimitSize() != 0) {
@@ -93,6 +91,7 @@ public final class CreateJavaBeanTask extends BaseTask<List<TableInfo>> {
                             .append(tableFiledEntity.getFieldLimitSize()).append("位\")\n");
                 }
             }
+            //组装字段
             String fieldName = StringUtil.firstIsUpperCase(tableFiledEntity.getName()) ? StringUtil.firstToLowerCase(tableFiledEntity.getName()) : tableFiledEntity.getName();
             sb.append("\tprivate ").append(tableFiledEntity.getType())
                     .append(" ").append(fieldName).append(";\n");

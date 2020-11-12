@@ -1,10 +1,9 @@
-package com.lq.task.mybatis;
+package com.lq.glob.task;
 
 
 import com.lq.SpringBootCli;
 import com.lq.entity.TableFiledEntity;
 import com.lq.entity.TableInfo;
-import com.lq.task.BaseTask;
 import com.lq.util.FileUtil;
 import com.lq.util.StringUtil;
 
@@ -31,9 +30,14 @@ public final class CreateRedisConfigTask extends BaseTask<Boolean> {
                     StringBuilder redisConfigPrefix = new StringBuilder(fileContentSb.substring(0, index));
                     StringBuilder redisConfigContent = new StringBuilder(fileContentSb.substring(index, fileContentSb.lastIndexOf("}")));
                     for (TableInfo tableInfo : tableInfos) {
-                        TableInfo transformTableInfo = tableInfo.getTransformTableInfo();
-                        if (!redisConfigContent.toString().contains(StringUtil.firstToLowerCase(transformTableInfo.getTableName()) + "RedisTemplate")) {
-                            writeRedis(redisConfigPrefix, redisConfigContent, transformTableInfo);
+                        TableFiledEntity pri = tableInfo.getTransformTableInfo().getFiledEntities().stream()
+                                .filter(tableFiledEntity -> tableFiledEntity.getKey().equals("PRI"))
+                                .findFirst().orElse(null);
+                        if (pri != null) {
+                            TableInfo transformTableInfo = tableInfo.getTransformTableInfo();
+                            if (!redisConfigContent.toString().contains(StringUtil.firstToLowerCase(transformTableInfo.getTableName()) + "RedisTemplate")) {
+                                writeRedis(redisConfigPrefix, redisConfigContent, transformTableInfo);
+                            }
                         }
                     }
                     redisConfigContent.append("\n}");
@@ -53,7 +57,9 @@ public final class CreateRedisConfigTask extends BaseTask<Boolean> {
                 StringBuilder redisConfigContent = new StringBuilder("\n@Configuration\npublic class RedisConfig {\n\n");
                 for (TableInfo tableInfo : tableInfos) {
                     TableInfo transformTableInfo = tableInfo.getTransformTableInfo();
-                    writeRedis(redisConfigPrefix, redisConfigContent, transformTableInfo);
+                    tableInfo.getTransformTableInfo().getFiledEntities().stream()
+                            .filter(tableFiledEntity -> tableFiledEntity.getKey().equals("PRI"))
+                            .findFirst().ifPresent(pri -> writeRedis(redisConfigPrefix, redisConfigContent, transformTableInfo));
                 }
                 redisConfigContent.append("\n}");
                 redisConfigPrefix.append(redisConfigContent);
@@ -81,7 +87,7 @@ public final class CreateRedisConfigTask extends BaseTask<Boolean> {
                 .append(redisKeyType).append(", ")
                 .append(transformTableInfo.getTableName())
                 .append("> template = new RedisTemplate<>();");
-        if (redisKeyType.equals("String")){
+        if (redisKeyType.equals("String")) {
             redisConfigContent.append("\n\t\ttemplate.setKeySerializer(new StringRedisSerializer());");
         }
         redisConfigContent.append("\n\t\ttemplate.setConnectionFactory(redisConnectionFactory);\n\t\tJackson2JsonRedisSerializer<")

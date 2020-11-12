@@ -1,10 +1,10 @@
-package com.lq.task.mybatis;
+package com.lq.mybaits.task;
 
 
 import com.lq.SpringBootCli;
 import com.lq.entity.TableFiledEntity;
 import com.lq.entity.TableInfo;
-import com.lq.task.BaseTask;
+import com.lq.glob.task.BaseTask;
 import com.lq.util.FileUtil;
 import com.lq.util.StringUtil;
 
@@ -63,7 +63,8 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                                     .append(transformTableInfo.getTableName()).append("(");
                             for (int x = 1; x < filedEntities.size(); x++) {
                                 TableFiledEntity tableFiledEntity = filedEntities.get(x);
-                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                        tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                                     sb.append("String ").append(tableFiledEntity.getName()).append(",");
                                 }
                             }
@@ -71,7 +72,8 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                                     .append("Integer queryAll").append(transformTableInfo.getTableName()).append("Count(");
                             for (int x = 1; x < filedEntities.size(); x++) {
                                 TableFiledEntity tableFiledEntity = filedEntities.get(x);
-                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                        tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                                     sb.append("String ").append(tableFiledEntity.getName()).append(",");
                                 }
                             }
@@ -199,7 +201,8 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                             .append(transformTableInfo.getTableName()).append("(");
                     for (int x = 1; x < filedEntities.size(); x++) {
                         TableFiledEntity tableFiledEntity = filedEntities.get(x);
-                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                             sb.append("String ").append(tableFiledEntity.getName()).append(",");
                         }
                     }
@@ -209,7 +212,8 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                             .append(transformTableInfo.getTableName()).append("(");
                     for (int x = 1; x < filedEntities.size(); x++) {
                         TableFiledEntity tableFiledEntity = filedEntities.get(x);
-                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                             sb.append(tableFiledEntity.getName()).append(",");
                         }
                     }
@@ -217,7 +221,8 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                             .append("\t@Override\n\tpublic Integer queryAll").append(transformTableInfo.getTableName()).append("Count(");
                     for (int x = 1; x < filedEntities.size(); x++) {
                         TableFiledEntity tableFiledEntity = filedEntities.get(x);
-                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                             sb.append("String ").append(tableFiledEntity.getName()).append(",");
                         }
                     }
@@ -231,7 +236,8 @@ public final class CreateServiceTask extends BaseTask<Boolean> {
                     sb.append("Count(");
                     for (int x = 1; x < filedEntities.size(); x++) {
                         TableFiledEntity tableFiledEntity = filedEntities.get(x);
-                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                             sb.append(tableFiledEntity.getName()).append(",");
                         }
                     }

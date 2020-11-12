@@ -1,4 +1,4 @@
-package com.lq.task;
+package com.lq.glob.task;
 
 import com.lq.SpringBootCli;
 import com.lq.util.FileUtil;
@@ -6,44 +6,58 @@ import com.lq.util.FileUtil;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * 创建模板文件
+ */
 public final class CreateTemplateTask {
 
     private SpringBootCli springBootCli;
+    private String frameModel;
 
-    public CreateTemplateTask(SpringBootCli springBootCli) {
+    public CreateTemplateTask(SpringBootCli springBootCli, String frameModel) {
         this.springBootCli = springBootCli;
+        this.frameModel = frameModel;
     }
 
     public void execute() throws IOException {
-        createLog4j();
+        if (frameModel.equals(SpringBootCli.FrameModel.MYBATIS)) {
+            createLog4j();
+        }
         createSpringBootApplication();
         createCorsConfigClass();
         createGlobExceptionHandler();
         createWebCommentResponse();
     }
 
+    /**
+     * 创建springboot启动文件
+     *
+     * @throws IOException
+     */
     private void createSpringBootApplication() throws IOException {
         File file = new File(springBootCli.getRootPackagePath() + "Application.java");
         if (!file.exists()) {
             if (file.createNewFile()) {
-                String sb = "package " + springBootCli.getPackageName() + ";" + "\n\n" +
-                        "import " +
-                        "org.mybatis.spring.annotation.MapperScan;\n" +
-                        "import " +
-                        "org.springframework.boot.SpringApplication;\n" +
-                        "import " +
-                        "org.springframework.boot.autoconfigure.SpringBootApplication;\n\n";
-                sb += "@MapperScan(\"" +
-                        springBootCli.getPackageName() +
-                        ".mapper\")\n";
-                sb += "@SpringBootApplication\n" +
+                String sb = "package " + springBootCli.getPackageName() + ";" + "\n\n";
+                sb += "import org.springframework.boot.SpringApplication;\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\n";
+                if (frameModel.equals(SpringBootCli.FrameModel.MYBATIS)) {
+                    sb += "import org.mybatis.spring.annotation.MapperScan;\n\n";
+                    sb += "@MapperScan(\"" +
+                            springBootCli.getPackageName() +
+                            ".mapper\")";
+                }
+                sb += "\n@SpringBootApplication\n" +
                         "public class Application {\n\n\tpublic static void main(String[] args){\n\t\tSpringApplication.run(Application.class, args);\n\t}\n}";
                 FileUtil.createWriteFile(file, sb);
             }
         }
     }
 
-
+    /**
+     * 创建后端跨域文件
+     *
+     * @throws IOException
+     */
     private void createCorsConfigClass() throws IOException {
         String configDirPath = springBootCli.getRootPackagePath() + "config" + File.separator;
         File configDir = new File(configDirPath);
@@ -70,6 +84,11 @@ public final class CreateTemplateTask {
 
     }
 
+    /**
+     * 创建全局异常处理文件
+     *
+     * @throws IOException
+     */
     private void createGlobExceptionHandler() throws IOException {
         String exceptionDirPath = springBootCli.getRootPackagePath() + "exception" + File.separator;
         File exceptionDir = new File(exceptionDirPath);
@@ -82,39 +101,57 @@ public final class CreateTemplateTask {
         if (!globExceptionHandlerFile.exists()) {
             if (globExceptionHandlerFile.createNewFile()) {
                 String globExceptionHandler = "package " + springBootCli.getPackageName() + ".exception;\n\n";
-                globExceptionHandler += "import com.alibaba.fastjson.support.spring.FastJsonJsonView;\n" +
-                        "import org.springframework.stereotype.Component;\n" +
+                globExceptionHandler += "import org.springframework.stereotype.Component;\n" +
                         "import org.springframework.web.servlet.HandlerExceptionResolver;\n" +
                         "import org.springframework.web.servlet.ModelAndView;\n" +
                         "\n" +
                         "import javax.servlet.http.HttpServletRequest;\n" +
                         "import javax.servlet.http.HttpServletResponse;\n" +
-                        "import java.util.HashMap;\n" +
-                        "import java.util.Map;\n" +
+                        "import java.io.IOException;\n" +
+                        "import java.io.PrintWriter;\n" +
                         "\n" +
                         "@Component\n" +
                         "public class GlobExceptionHandler implements HandlerExceptionResolver {\n" +
                         "\n" +
+                        "    public static final ModelAndView MV = new ModelAndView();\n" +
+                        "\n" +
                         "    @Override\n" +
                         "    public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse response, Object handler, Exception ex) {\n" +
-                        "        ModelAndView mv = new ModelAndView();\n" +
-                        "        FastJsonJsonView view = new FastJsonJsonView();\n" +
-                        "        Map<String, Object> attributes = new HashMap<>();\n" +
-                        "        attributes.put(\"data\", null);\n" +
-                        "        attributes.put(\"errorInfo\", ex.getMessage());\n" +
-                        "        attributes.put(\"status\", 240);\n" +
-                        "        view.setAttributesMap(attributes);\n" +
-                        "        mv.setView(view);\n" +
-                        "        return mv;\n" +
+                        "        String jsonTemplate = clientJsonTemplate(ex.getMessage());\n" +
+                        "        responseClientData(response,jsonTemplate);\n" +
+                        "        return MV;\n" +
                         "    }\n" +
                         "\n" +
-                        "}\n";
+                        "    private static String clientJsonTemplate(String error) {\n" +
+                        "        return \"{\\n\" +\n" +
+                        "                \" \\\"errorInfo\\\":\\\"\" + error + \"\\\",\\n\" +\n" +
+                        "                \" \\\"data\\\": null,\\n\" +\n" +
+                        "                \" \\\"status\\\": 240\\n\" +\n" +
+                        "                \"}\";\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    private void responseClientData(HttpServletResponse response, String json) {\n" +
+                        "        response.setCharacterEncoding(\"UTF-8\");\n" +
+                        "        response.setContentType(\"application/json; charset=utf-8\");\n" +
+                        "        try (PrintWriter out = response.getWriter()) {\n" +
+                        "            out.append(json);\n" +
+                        "        } catch (IOException e) {\n" +
+                        "            e.printStackTrace();\n" +
+                        "        }\n" +
+                        "    }\n" +
+                        "\n" +
+                        "}";
                 FileUtil.createWriteFile(globExceptionHandlerFile, globExceptionHandler);
             }
         }
     }
 
 
+    /**
+     * 创建依赖web相关的文件
+     *
+     * @throws IOException
+     */
     private void createWebCommentResponse() throws IOException {
         String utilDirPath = springBootCli.getRootPackagePath() + "util" + File.separator;
         File utilDir = new File(utilDirPath);
@@ -194,78 +231,80 @@ public final class CreateTemplateTask {
                 FileUtil.createWriteFile(commentResponseFile, commentResponse);
             }
         }
-        File commentPageResponseFile = new File(utilDirPath + "CommentPageResponse.java");
-        if (!commentPageResponseFile.exists()) {
-            if (commentPageResponseFile.createNewFile()) {
-                String commentPageResponse = "package " + springBootCli.getPackageName() + ".util;\n\n";
-                commentPageResponse += "import java.net.HttpURLConnection;\n" +
-                        "\n" +
-                        "public class CommentPageResponse<T> extends CommentResponse<T> {\n" +
-                        "\n" +
-                        "    private static final CommentPageResponse FAIL_COMMENT_RESPONSE =  new CommentPageResponse<>(FAIL_CODE, null, FAIL_MSG);\n" +
-                        "\n" +
-                        "    private Integer totalPage;\n" +
-                        "    private Integer totalSize;\n" +
-                        "    private Integer page;\n" +
-                        "    private Integer pageSize;\n" +
-                        "\n" +
-                        "    private CommentPageResponse(int status, T data, String errorInfo) {\n" +
-                        "        super(status, data, errorInfo);\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    private CommentPageResponse(int status, T data, String errorInfo, Integer totalPage, Integer totalSize, Integer page, Integer pageSize) {\n" +
-                        "        super(status, data, errorInfo);\n" +
-                        "        this.totalPage = totalPage;\n" +
-                        "        this.totalSize = totalSize;\n" +
-                        "        this.page = page;\n" +
-                        "        this.pageSize = pageSize;\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    public Integer getTotalPage() {\n" +
-                        "        return totalPage;\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    public void setTotalPage(Integer totalPage) {\n" +
-                        "        this.totalPage = totalPage;\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    public Integer getTotalSize() {\n" +
-                        "        return totalSize;\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    public void setTotalSize(Integer totalSize) {\n" +
-                        "        this.totalSize = totalSize;\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    public Integer getPage() {\n" +
-                        "        return page;\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    public void setPage(Integer page) {\n" +
-                        "        this.page = page;\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    public Integer getPageSize() {\n" +
-                        "        return pageSize;\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    public void setPageSize(Integer pageSize) {\n" +
-                        "        this.pageSize = pageSize;\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    public static <T> CommentPageResponse<T> success(T t,Integer totalPage, Integer totalSize, Integer page, Integer pageSize) {\n" +
-                        "        return new CommentPageResponse<>(HttpURLConnection.HTTP_OK, t, null,totalPage,totalSize,page,pageSize);\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    public static <T> CommentPageResponse<T> fail(String msg) {\n" +
-                        "        return new CommentPageResponse<>(FAIL_CODE, null, msg);\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    public static <T> CommentPageResponse<T> selfFail() {\n" +
-                        "        return  FAIL_COMMENT_RESPONSE;\n" +
-                        "    }\n" +
-                        "}";
-                FileUtil.createWriteFile(commentPageResponseFile, commentPageResponse);
+        if (frameModel.equals(SpringBootCli.FrameModel.MYBATIS)) {
+            File commentPageResponseFile = new File(utilDirPath + "CommentPageResponse.java");
+            if (!commentPageResponseFile.exists()) {
+                if (commentPageResponseFile.createNewFile()) {
+                    String commentPageResponse = "package " + springBootCli.getPackageName() + ".util;\n\n";
+                    commentPageResponse += "import java.net.HttpURLConnection;\n" +
+                            "\n" +
+                            "public class CommentPageResponse<T> extends CommentResponse<T> {\n" +
+                            "\n" +
+                            "    private static final CommentPageResponse FAIL_COMMENT_RESPONSE =  new CommentPageResponse<>(FAIL_CODE, null, FAIL_MSG);\n" +
+                            "\n" +
+                            "    private Integer totalPage;\n" +
+                            "    private Integer totalSize;\n" +
+                            "    private Integer page;\n" +
+                            "    private Integer pageSize;\n" +
+                            "\n" +
+                            "    private CommentPageResponse(int status, T data, String errorInfo) {\n" +
+                            "        super(status, data, errorInfo);\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    private CommentPageResponse(int status, T data, String errorInfo, Integer totalPage, Integer totalSize, Integer page, Integer pageSize) {\n" +
+                            "        super(status, data, errorInfo);\n" +
+                            "        this.totalPage = totalPage;\n" +
+                            "        this.totalSize = totalSize;\n" +
+                            "        this.page = page;\n" +
+                            "        this.pageSize = pageSize;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public Integer getTotalPage() {\n" +
+                            "        return totalPage;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setTotalPage(Integer totalPage) {\n" +
+                            "        this.totalPage = totalPage;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public Integer getTotalSize() {\n" +
+                            "        return totalSize;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setTotalSize(Integer totalSize) {\n" +
+                            "        this.totalSize = totalSize;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public Integer getPage() {\n" +
+                            "        return page;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPage(Integer page) {\n" +
+                            "        this.page = page;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public Integer getPageSize() {\n" +
+                            "        return pageSize;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public void setPageSize(Integer pageSize) {\n" +
+                            "        this.pageSize = pageSize;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public static <T> CommentPageResponse<T> success(T t,Integer totalPage, Integer totalSize, Integer page, Integer pageSize) {\n" +
+                            "        return new CommentPageResponse<>(HttpURLConnection.HTTP_OK, t, null,totalPage,totalSize,page,pageSize);\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public static <T> CommentPageResponse<T> fail(String msg) {\n" +
+                            "        return new CommentPageResponse<>(FAIL_CODE, null, msg);\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public static <T> CommentPageResponse<T> selfFail() {\n" +
+                            "        return  FAIL_COMMENT_RESPONSE;\n" +
+                            "    }\n" +
+                            "}";
+                    FileUtil.createWriteFile(commentPageResponseFile, commentPageResponse);
+                }
             }
         }
         File jacksonUtilFile = new File(utilDirPath + "JacksonUtil.java");
@@ -348,6 +387,12 @@ public final class CreateTemplateTask {
         }
     }
 
+
+    /**
+     * 创建Log4j的配追文件
+     *
+     * @throws IOException
+     */
     private void createLog4j() throws IOException {
         String log4j2Path = springBootCli.getProjectPath() + File.separator + "src" + File.separator + "main"
                 + File.separator + "resources" + File.separator + "log4j2-spring.xml";

@@ -1,11 +1,9 @@
-package com.lq.task.mybatis;
-
-
+package com.lq.mybaits.task;
 
 import com.lq.SpringBootCli;
 import com.lq.entity.TableFiledEntity;
 import com.lq.entity.TableInfo;
-import com.lq.task.BaseTask;
+import com.lq.glob.task.BaseTask;
 import com.lq.util.StringUtil;
 
 import java.util.List;
@@ -82,7 +80,8 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
                             .append(transformTableInfo.getTableName()).append("(");
                     for (int x = 1; x < filedEntities.size(); x++) {
                         TableFiledEntity tableFiledEntity = filedEntities.get(x);
-                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                             sb.append("@RequestParam(value = \"")
                                     .append(filedEntities.get(x).getName())
                                     .append("\", required = false) String ").append(filedEntities.get(x).getName()).append(",\n\t\t\t\t\t\t\t\t\t\t\t\t");
@@ -95,7 +94,8 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
                             .append(transformTableInfo.getTableName()).append("(");
                     for (int x = 1; x < filedEntities.size(); x++) {
                         TableFiledEntity tableFiledEntity = filedEntities.get(x);
-                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                             sb.append(tableFiledEntity.getName()).append(",");
                         }
                     }
@@ -105,7 +105,8 @@ public final class CreateControllerTask extends BaseTask<Boolean> {
                     for (int x = 1; x < filedEntities.size(); x++) {
                         TableFiledEntity tableFiledEntity = filedEntities.get(x);
                         Integer fieldLimitSize = tableFiledEntity.getFieldLimitSize();
-                        if (tableFiledEntity.getType().equals("String")&&fieldLimitSize<springBootCli.getQueryFieldLimitLength()) {
+                        if (tableFiledEntity.getType().equals("String")&&fieldLimitSize<springBootCli.getQueryFieldLimitLength()&&
+                                tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                             sb.append(tableFiledEntity.getName()).append(",");
                         }
                     }

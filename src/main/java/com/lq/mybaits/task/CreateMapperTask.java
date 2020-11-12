@@ -1,12 +1,10 @@
-package com.lq.task.mybatis;
-
-
+package com.lq.mybaits.task;
 
 
 import com.lq.SpringBootCli;
 import com.lq.entity.TableFiledEntity;
 import com.lq.entity.TableInfo;
-import com.lq.task.BaseTask;
+import com.lq.glob.task.BaseTask;
 import com.lq.util.StringUtil;
 
 import java.util.List;
@@ -57,7 +55,8 @@ public final class CreateMapperTask extends BaseTask<Boolean> {
                             sb.append("(");
                             for (int x = 1; x < filedEntities.size(); x++) {
                                 TableFiledEntity tableFiledEntity = filedEntities.get(x);
-                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                        tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                                     sb.append("@Param(\"")
                                             .append(tableFiledEntity.getName())
                                             .append("\")String ")
@@ -68,7 +67,8 @@ public final class CreateMapperTask extends BaseTask<Boolean> {
                                     .append("Integer queryAll").append(transformTableInfo.getTableName()).append("Count(");
                             for (int x = 1; x < filedEntities.size(); x++) {
                                 TableFiledEntity tableFiledEntity = filedEntities.get(x);
-                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                        tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                                     sb.append("@Param(\"")
                                             .append(tableFiledEntity.getName())
                                             .append("\")String ")

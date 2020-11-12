@@ -1,10 +1,10 @@
-package com.lq.task.mybatis;
+package com.lq.mybaits.task;
 
 
 import com.lq.SpringBootCli;
 import com.lq.entity.TableFiledEntity;
 import com.lq.entity.TableInfo;
-import com.lq.task.BaseTask;
+import com.lq.glob.task.BaseTask;
 import com.lq.util.FileUtil;
 import com.lq.util.StringUtil;
 
@@ -145,7 +145,8 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
                     sb.append("\n\n\t<sql id=\"queryCondition\">\n\t\t<where>");
                     for (int x = 1; x < filedEntities2.size(); x++) {
                         TableFiledEntity tableFiledEntity = filedEntities2.get(x);
-                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()) {
+                        if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                             sb.append("\n\t\t\t<if test=\"")
                                     .append(tableFiledEntity.getName())
                                     .append("!=null and ")

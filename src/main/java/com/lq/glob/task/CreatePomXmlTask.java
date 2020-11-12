@@ -1,6 +1,7 @@
-package com.lq.task;
+package com.lq.glob.task;
 
 import com.lq.SpringBootCli;
+import com.lq.glob.Constants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -18,12 +19,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 创建pom文件
+ */
 public final class CreatePomXmlTask {
 
     private SpringBootCli springBootCli;
+    private String frameModel;
 
-    public CreatePomXmlTask(SpringBootCli springBootCli) {
+    public CreatePomXmlTask(SpringBootCli springBootCli, String frameModel) {
         this.springBootCli = springBootCli;
+        this.frameModel = frameModel;
     }
 
     public void execute() throws Exception {
@@ -57,7 +63,7 @@ public final class CreatePomXmlTask {
             Element artifactIdElm = document.createElement("artifactId");
             artifactIdElm.setTextContent("spring-boot-starter-parent");
             Element versionElm = document.createElement("version");
-            versionElm.setTextContent(springBootCli.getSpringBootVersion());
+            versionElm.setTextContent(Constants.springBootVersion);
             Element relativePathElm = document.createElement("relativePath");
             parentElm.appendChild(groupIdElm);
             parentElm.appendChild(artifactIdElm);
@@ -97,38 +103,9 @@ public final class CreatePomXmlTask {
             Element springBootWeb = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-web");
             dependenciesNode.appendChild(springBootWeb);
         }
-        if (!dependencies.contains("spring-boot-starter-actuator")) {
-            Element springBootWeb = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-actuator");
-            dependenciesNode.appendChild(springBootWeb);
-        }
-        if (!dependencies.contains("spring-boot-configuration-processor")) {
-            Element dependencyElm = document.createElement("dependency");
-            Element groupIdElm = document.createElement("groupId");
-            groupIdElm.setTextContent("org.springframework.boot");
-            Element artifactIdElm = document.createElement("artifactId");
-            artifactIdElm.setTextContent("spring-boot-configuration-processor");
-            Element optionalElm = document.createElement("optional");
-            optionalElm.setTextContent("true");
-            dependencyElm.appendChild(groupIdElm);
-            dependencyElm.appendChild(artifactIdElm);
-            dependencyElm.appendChild(optionalElm);
-            dependenciesNode.appendChild(dependencyElm);
-        }
-        if (!dependencies.contains("fastjson")) {
-            Element fastjson = createDependencyElm(document, "com.alibaba", "fastjson", springBootCli.getFastJsonVersion());
-            dependenciesNode.appendChild(fastjson);
-        }
-        if (!dependencies.contains("mybatis-spring-boot-starter")) {
-            Element mybatis = createDependencyElm(document, "org.mybatis.spring.boot", "mybatis-spring-boot-starter", springBootCli.getMybatisVersion());
-            dependenciesNode.appendChild(mybatis);
-        }
         if (!dependencies.contains("mysql-connector-java")) {
-            Element mysql = createDependencyElm(document, "mysql", "mysql-connector-java", springBootCli.getMysqlConnectorVersion());
+            Element mysql = createDependencyElm(document, "mysql", "mysql-connector-java", Constants.mysqlConnectorVersion);
             dependenciesNode.appendChild(mysql);
-        }
-        if (!dependencies.contains("druid")) {
-            Element druid = createDependencyElm(document, "com.alibaba", "druid", springBootCli.getDruidVersion());
-            dependenciesNode.appendChild(druid);
         }
         if (!dependencies.contains("spring-boot-starter-data-redis") && springBootCli.isUseRedis()) {
             Element redis = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-data-redis");
@@ -138,20 +115,31 @@ public final class CreatePomXmlTask {
                 dependenciesNode.appendChild(jackson);
             }
         }
-        if (!dependencies.contains("spring-boot-starter-log4j2")) {
-            Element log4j2 = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-log4j2");
-            dependenciesNode.appendChild(log4j2);
-            Element elm = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter");
-            Element exclusions = document.createElement("exclusions");
-            Element exclusion = document.createElement("exclusion");
-            Element groupId = document.createElement("groupId");
-            Element artifactId = document.createElement("artifactId");
-            groupId.setTextContent("org.springframework.boot");
-            artifactId.setTextContent("spring-boot-starter-logging");
-            exclusion.appendChild(artifactId);
-            exclusions.appendChild(exclusion).appendChild(groupId);
-            elm.appendChild(exclusions);
-            dependenciesNode.appendChild(elm);
+        if (frameModel.equals(SpringBootCli.FrameModel.MYBATIS)) {
+            if (!dependencies.contains("mybatis-spring-boot-starter")) {
+                Element mybatis = createDependencyElm(document, "org.mybatis.spring.boot", "mybatis-spring-boot-starter", Constants.mybatisVersion);
+                dependenciesNode.appendChild(mybatis);
+            }
+            if (!dependencies.contains("spring-boot-starter-log4j2")) {
+                Element log4j2 = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-log4j2");
+                dependenciesNode.appendChild(log4j2);
+                Element elm = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter");
+                Element exclusions = document.createElement("exclusions");
+                Element exclusion = document.createElement("exclusion");
+                Element groupId = document.createElement("groupId");
+                Element artifactId = document.createElement("artifactId");
+                groupId.setTextContent("org.springframework.boot");
+                artifactId.setTextContent("spring-boot-starter-logging");
+                exclusion.appendChild(artifactId);
+                exclusions.appendChild(exclusion).appendChild(groupId);
+                elm.appendChild(exclusions);
+                dependenciesNode.appendChild(elm);
+            }
+        }else {
+            if (!dependencies.contains("spring-boot-starter-data-jpa")) {
+                Element springBootStarterDataJpa = createDependencyElm(document, "org.springframework.boot", "spring-boot-starter-data-jpa");
+                dependenciesNode.appendChild(springBootStarterDataJpa);
+            }
         }
         project.appendChild(dependenciesNode);
         if (buildNodeNonExist) {
@@ -166,7 +154,6 @@ public final class CreatePomXmlTask {
             build.appendChild(plugins).appendChild(plugin).appendChild(groupId);
             project.appendChild(build);
         }
-
         writeXml(document, pomFile);
     }
 

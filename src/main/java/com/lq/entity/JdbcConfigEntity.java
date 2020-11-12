@@ -2,14 +2,12 @@ package com.lq.entity;
 
 public class JdbcConfigEntity {
 
-    private String driverClassName;
     private String url;
     private String username;
     private String password;
     private String host;
 
     private JdbcConfigEntity(Builder builder) {
-        this.driverClassName = builder.driverClassName;
         this.host = builder.host;
         this.url = builder.url;
         this.username = builder.username;
@@ -17,7 +15,7 @@ public class JdbcConfigEntity {
     }
 
     public String getDriverClassName() {
-        return driverClassName != null && driverClassName.length() > 0 ? driverClassName : "com.mysql.jdbc.Driver";
+        return "com.mysql.jdbc.Driver";
     }
 
     public String getUrl() {
@@ -37,7 +35,6 @@ public class JdbcConfigEntity {
     }
 
     public static class Builder {
-        private String driverClassName;
         private String url;
         private String dbName;
         private String username;
@@ -54,11 +51,6 @@ public class JdbcConfigEntity {
         public Builder url(String host,int port) {
             this.url = "jdbc:mysql://"+host+":"+port+"/"+this.dbName+"?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8";
             this.host = host;
-            return this;
-        }
-
-        public Builder driverClassName(String driverClassName) {
-            this.driverClassName = driverClassName;
             return this;
         }
 
