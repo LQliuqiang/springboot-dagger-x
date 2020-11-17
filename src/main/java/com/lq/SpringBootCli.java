@@ -18,13 +18,9 @@ public class SpringBootCli {
     private JdbcConfigEntity jdbcConfigEntity;
     private int queryCriteriaLimit;
     private boolean useRedis;
-    //强制覆盖所有的
     private boolean forceCover;
-    //项目名称路径，如：D:\beacon-project\springboot-dagger-project\springboot-dagger
     private String projectPath;
-    //包路径，如：com.fii
     private String packageName;
-    //项目包路径，如：D:\beacon-project\springboot-dagger-project\springboot-dagger\src\main\java\com\fii\
     private String rootPackagePath;
 
     public SpringBootCli(Builder builder) {

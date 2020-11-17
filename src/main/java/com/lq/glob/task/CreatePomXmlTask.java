@@ -19,9 +19,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 创建pom文件
- */
 public final class CreatePomXmlTask {
 
     private SpringBootCli springBootCli;

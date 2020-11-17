@@ -34,9 +34,12 @@ public final class CreateMapperTask extends BaseTask<Boolean> {
         TableInfo transformTableInfo = tableInfo.getTransformTableInfo();
         StringBuilder sb = new StringBuilder();
         sb.append("package ").append(springBootCli.getPackageName()).append(".").append(getPackageName()).append(";\n\n")
-                .append("import org.apache.ibatis.annotations.Param;\n")
-                .append("import ").append(springBootCli.getPackageName()).append(".entity.")
-                .append(transformTableInfo.getTableName()).append(";\nimport java.util.List;\n\npublic interface ")
+                .append("import org.apache.ibatis.annotations.Param;\n");
+        if (!transformTableInfo.getTableName().equals("Param")) {
+            sb.append("import ").append(springBootCli.getPackageName()).append(".entity.")
+                    .append(transformTableInfo.getTableName()).append(";");
+        }
+        sb.append("\nimport java.util.List;\n\npublic interface ")
                 .append(transformTableInfo.getTableName()).append("Mapper {\n\n");
         List<TableFiledEntity> filedEntities = transformTableInfo.getFiledEntities();
         filedEntities.stream()
@@ -45,17 +48,28 @@ public final class CreateMapperTask extends BaseTask<Boolean> {
                 .ifPresent(priKey -> {
                             sb.append("\tboolean insert")
                                     .append(transformTableInfo.getTableName())
-                                    .append("(")
-                                    .append(transformTableInfo.getTableName())
-                                    .append(" ")
+                                    .append("(");
+                            if (!transformTableInfo.getTableName().equals("Param")) {
+                                sb.append(transformTableInfo.getTableName());
+                            } else {
+                                sb.append(springBootCli.getPackageName()).append(".entity.")
+                                        .append(transformTableInfo.getTableName());
+                            }
+                            sb.append(" ")
                                     .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
-                                    .append(");\n\n\t");
-                            sb.append("List<").append(transformTableInfo.getTableName()).append("> queryAll")
+                                    .append(");\n\n\tList<");
+                            if (!transformTableInfo.getTableName().equals("Param")) {
+                                sb.append(transformTableInfo.getTableName());
+                            } else {
+                                sb.append(springBootCli.getPackageName()).append(".entity.")
+                                        .append(transformTableInfo.getTableName());
+                            }
+                            sb.append("> queryAll")
                                     .append(transformTableInfo.getTableName());
                             sb.append("(");
                             for (int x = 1; x < filedEntities.size(); x++) {
                                 TableFiledEntity tableFiledEntity = filedEntities.get(x);
-                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                if (tableFiledEntity.getType().equals("String") && tableFiledEntity.getFieldLimitSize() < springBootCli.getQueryFieldLimitLength() &&
                                         tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                                     sb.append("@Param(\"")
                                             .append(tableFiledEntity.getName())
@@ -67,7 +81,7 @@ public final class CreateMapperTask extends BaseTask<Boolean> {
                                     .append("Integer queryAll").append(transformTableInfo.getTableName()).append("Count(");
                             for (int x = 1; x < filedEntities.size(); x++) {
                                 TableFiledEntity tableFiledEntity = filedEntities.get(x);
-                                if (tableFiledEntity.getType().equals("String")&&tableFiledEntity.getFieldLimitSize()<springBootCli.getQueryFieldLimitLength()&&
+                                if (tableFiledEntity.getType().equals("String") && tableFiledEntity.getFieldLimitSize() < springBootCli.getQueryFieldLimitLength() &&
                                         tableFiledEntity.getFieldLimitSize() != null && tableFiledEntity.getFieldLimitSize() > 0) {
                                     sb.append("@Param(\"")
                                             .append(tableFiledEntity.getName())
@@ -82,8 +96,13 @@ public final class CreateMapperTask extends BaseTask<Boolean> {
                                 }
                             }
                             sb.append(");\n\n\t");
-                            sb.append(transformTableInfo.getTableName())
-                                    .append(" query")
+                            if (!transformTableInfo.getTableName().equals("Param")) {
+                                sb.append(transformTableInfo.getTableName());
+                            } else {
+                                sb.append(springBootCli.getPackageName()).append(".entity.")
+                                        .append(transformTableInfo.getTableName());
+                            }
+                            sb.append(" query")
                                     .append(transformTableInfo.getTableName())
                                     .append("By")
                                     .append(StringUtil.firstToUpperCase(priKey.getName()))
@@ -116,9 +135,14 @@ public final class CreateMapperTask extends BaseTask<Boolean> {
                                     .append(priKey.getName())
                                     .append("s);\n\n\tboolean update")
                                     .append(transformTableInfo.getTableName())
-                                    .append("(")
-                                    .append(transformTableInfo.getTableName())
-                                    .append(" ")
+                                    .append("(");
+                            if (!transformTableInfo.getTableName().equals("Param")) {
+                                sb.append(transformTableInfo.getTableName());
+                            } else {
+                                sb.append(springBootCli.getPackageName()).append(".entity.")
+                                        .append(transformTableInfo.getTableName());
+                            }
+                            sb.append(" ")
                                     .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
                                     .append(");\n\n");
                         }

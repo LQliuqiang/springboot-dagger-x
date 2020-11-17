@@ -91,7 +91,6 @@ public class CreateJavaBeanTask extends BaseTask<List<TableInfo>> {
         List<TableFiledEntity> filedEntities = transformTableInfo.getFiledEntities();
         for (int i = 0; i < filedEntities.size(); i++) {
             TableFiledEntity tableFiledEntity = filedEntities.get(i);
-            //组装字段限制条件注解
             if (!tableFiledEntity.getKey().equals("PRI") && tableFiledEntity.getaNull().equals("NO") && tableFiledEntity.getType().equals("String")) {
                 sb.append("\t@NotBlank(message=\"").append(tableFiledEntity.getName()).append("不能为空\")\n");
                 if (tableFiledEntity.getFieldLimitSize() != 0) {
@@ -100,7 +99,6 @@ public class CreateJavaBeanTask extends BaseTask<List<TableInfo>> {
                             .append(tableFiledEntity.getFieldLimitSize()).append("位\")\n");
                 }
             }
-            //组装字段
             String fieldName = StringUtil.firstIsUpperCase(tableFiledEntity.getName()) ? StringUtil.firstToLowerCase(tableFiledEntity.getName()) : tableFiledEntity.getName();
             if (tableFiledEntity.getKey().equals("PRI")) {
                 sb.append("\t@Id\n");

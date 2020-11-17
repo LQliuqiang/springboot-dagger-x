@@ -5,9 +5,6 @@ import com.lq.util.FileUtil;
 
 import java.io.File;
 
-/**
- * 创建application.yml配置文件
- */
 public final class CreateApplicationXmlTask {
 
     private SpringBootCli springBootCli;

@@ -27,13 +27,9 @@ public class Jpa {
     }
 
     public void initSpringBoot(String... filterTableNames) throws Exception {
-        //创建pom文件
         new CreatePomXmlTask(springBootCli,SpringBootCli.FrameModel.JPA).execute();
-        //创建application.yml文件
         new CreateApplicationXmlTask(springBootCli,SpringBootCli.FrameModel.JPA).execute();
-        //创建基本web辅助的文件
         new CreateTemplateTask(springBootCli,SpringBootCli.FrameModel.JPA).execute();
-        //创建mybatis
         List<String> tableNameList = Arrays.asList(filterTableNames);
         List<TableInfo> tableInfos = new CreateJavaBeanTask(springBootCli).execute(tableInfo -> !tableNameList.contains(tableInfo.getTableName()));
         create(null,tableInfos);

@@ -6,9 +6,6 @@ import com.lq.util.FileUtil;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * 创建模板文件
- */
 public final class CreateTemplateTask {
 
     private SpringBootCli springBootCli;

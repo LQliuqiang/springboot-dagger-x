@@ -54,7 +54,6 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
                 "        PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\"\n" +
                 "        \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n<mapper namespace=\"";
         StringBuilder sb = new StringBuilder(mapperXmlHeader);
-        //数据库原型字段
         List<TableFiledEntity> filedEntities = tableInfo.getFiledEntities();
         StringBuilder sqlField = new StringBuilder();
         for (TableFiledEntity filedEntity : filedEntities) {
@@ -67,7 +66,6 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
                 .append("ColumnSql\">\n\t\t")
                 .append(sqlField.deleteCharAt(sqlField.length() - 1))
                 .append("\n\t</sql>");
-//        //javabean中的属性
         List<TableFiledEntity> filedEntities2 = transformTableInfo.getFiledEntities();
         for (int i = 0; i < filedEntities2.size(); i++) {
             TableFiledEntity priKey = filedEntities2.get(i);
@@ -86,7 +84,6 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
                         .append("(<include refid=\"")
                         .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
                         .append("ColumnSql\"/>)\n\t\tvalues(");
-                //javabean中的属性
                 for (TableFiledEntity filedEntity : filedEntities2) {
                     String fieldName = StringUtil.firstIsUpperCase(filedEntity.getName()) ? StringUtil.firstToLowerCase(filedEntity.getName()) : filedEntity.getName();
                     sb.append("#{").append(fieldName).append("},");
@@ -189,9 +186,7 @@ public final class CreateMapperXmlTask extends BaseTask<Boolean> {
                         .append("\">\n\t\tupdate ")
                         .append(tableInfo.getTableName()).append("\n\t\t<trim prefix=\"set\" suffixOverrides=\",\"> \n\t\t\t");
                 for (int x = 0; x < filedEntities2.size(); x++) {
-                    //数据库原型字段
                     TableFiledEntity filedEntity = filedEntities.get(x);
-                    //javaBean字段
                     TableFiledEntity filedEntity1 = filedEntities2.get(x);
                     if (!filedEntity.getName().equals(priKey.getName())) {
                         if (filedEntity1.getType().equals("String")) {
