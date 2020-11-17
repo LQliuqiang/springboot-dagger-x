@@ -3,16 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3933e037-1e78-4a08-8be3-eb27aebf4b99" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/SpringBootCli.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/glob/task/CreateApplicationXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/glob/task/CreateApplicationXmlTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/glob/task/CreatePomXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/glob/task/CreatePomXmlTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/glob/task/CreateTemplateTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/glob/task/CreateTemplateTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/jpa/Jpa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/jpa/Jpa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/jpa/task/CreateJavaBeanTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/jpa/task/CreateJavaBeanTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/Mybatis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/Mybatis.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/task/CreateMapperTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/task/CreateMapperTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/task/CreateMapperXmlTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/mybaits/task/CreateMapperXmlTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/util/StringUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/util/StringUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lq/jpa/task/CreateServiceTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lq/jpa/task/CreateServiceTask.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +83,7 @@
       <workItem from="1605228276994" duration="719000" />
       <workItem from="1605494750219" duration="2689000" />
       <workItem from="1605518877212" duration="1824000" />
-      <workItem from="1605571204883" duration="1028000" />
+      <workItem from="1605571204883" duration="6688000" />
     </task>
     <servers />
   </component>

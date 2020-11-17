@@ -293,7 +293,7 @@ public class CreateServiceTask extends BaseTask<Boolean> {
                             sb.append("\n\t\t\tif(")
                                     .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName())).append(".get")
                                     .append(StringUtil.firstToUpperCase(tableFiledEntity.getName()))
-                                    .append("() != null) {\n\t\t\t\tpredicates.add(cb.equal(root.get(\"")
+                                    .append("() != null) {\n\t\t\t\tpredicates.add(cb.like(root.get(\"")
                                     .append(tableFiledEntity.getName()).append("\"), \"%\" + ")
                                     .append(StringUtil.firstToLowerCase(transformTableInfo.getTableName()))
                                     .append(".get").append(StringUtil.firstToUpperCase(tableFiledEntity.getName()))
